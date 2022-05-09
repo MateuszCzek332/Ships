@@ -26,6 +26,18 @@ app.post("/addUser", function (req, res) {
 
 })
 
+app.post("/loginUser", function (req, res) {
+
+    let data = JSON.parse(req.body)
+    users.find({ userName: data.userName, pass: data.pass}, function (err, docs) {
+        if(docs.length > 0 ) // spprawdzenie czy w bazie istnieje user z takim loginem i haslem
+            data.status = true
+        else
+            data.status = false
+        res.send(data)
+    });
+})
+
 app.use(express.static('static'))
 
 app.listen(PORT, function () {

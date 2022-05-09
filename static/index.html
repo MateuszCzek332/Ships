@@ -17,6 +17,44 @@
     <button id="logMe" >Zaloguj się</button>
     <br><br>
     <a href="register.html"> Zarejestruj się </a>
-</body>
 
+    <script>    
+
+        let login = () =>{ // wysylanie danych na serwer, funkcja checkStatus sprawdza odpowiedz 
+
+            let data = {
+                userName: document.getElementById("login").value,
+                pass: document.getElementById("pass").value
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(data)
+            };
+
+            fetch("/loginUser", options)
+                .then(response => response.json())
+                .then(mess => checkStatus(mess))
+                .catch(error => console.log(error));
+
+        }
+
+        checkStatus = (data) => { //otrzymanie odpowiedzi od serwera o poprawnosci logowania
+            console.log(data)
+            if(data.status){
+                console.log("Logowanie udane")
+                window.location.href = "profile.html?user=" + data.userName
+            }
+            else
+                console.log("Zły login i/lub hasło")
+        }
+
+        document.getElementById("logMe").onclick = () =>{
+            login();
+
+        }
+    
+    </script>
+
+</body>
 </html>

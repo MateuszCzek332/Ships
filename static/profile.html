@@ -13,6 +13,13 @@
     <h1>Statki by MC & MP</h1>
     <h2 id="userName">Witaj </h2>
     <div id="root" style="overflow:hidden; margin: 0;"></div>
+    <script>
+        window.onload = () =>{
+            let params = new URLSearchParams(location.search)
+            let user = params.get("user")
+            document.getElementById("userName").innerText += " " + user;
+            console.log(user)
+        }
+    </script>
 </body>
-
 </html>
