@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body style="padding: 0; margin:0;">
+    <h1>Statki by MC & MP</h1>
+    <h2>Rejestracja</h2>
+    <p> Nazwa użytkownika: <input type="text" id="login"></p>
+    <p> Hasło: <input type="password" id="pass"></p>
+    <p> Powtórz hasło: <input type="password" id="pass2"></p>
+    <button id="newUser">Utwórz konto</button>
+    <br><br>
+    <a href="index.html"> Zaloguj się </a>
+
+    <script>    
+
+        let register = () =>{ // wysylanie danych na serwer, funkcja checkStatus sprawdza odpowiedz 
+
+            let data = {
+                userName: document.getElementById("login").value,
+                pass: document.getElementById("pass").value
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(data)
+            };
+
+            fetch("/addUser", options)
+                .then(response => response.json())
+                .then(mess => checkStatus(mess))
+                .catch(error => console.log(error));
+
+        }
+
+        checkStatus = (data) => { // Sprawdzanie odpowiedzi z serwera(jezeli w bazie jest taki user data.status = false)
+            if(data.status)
+                console.log("Rejestracja pomyślna")
+            else
+                console.log("taki uzytkownik juz istnieje")
+        }
+
+        document.getElementById("newUser").onclick = () =>{ // Sprawdzenie czy hasła są takie same, jesli tak wyslanie danych na serwer
+            if(document.getElementById("pass").value == document.getElementById("pass2").value)
+                register();
+            else
+                console.log("Hasła nie są takie same!")
+        }
+    
+    </script>
+</body>
+</html>
