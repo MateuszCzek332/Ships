@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body style="padding: 0; margin:0;">
+    <h1>Statki by MC & MP</h1>
+    <h2 id="userName">Witaj </h2>
+    <div id="root" style="overflow:hidden; margin: 0;"></div>
+    <script>
+        window.onload = () =>{
+            let params = new URLSearchParams(location.search)
+            let user = params.get("user")
+            document.getElementById("userName").innerText += " " + user;
+            console.log(user)
+        }
+    </script>
+</body>
+</html>
