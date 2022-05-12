@@ -1,10 +1,17 @@
 const express = require("express")
-const Datastore = require('nedb')
+const profil = require("./app/Profil")
+const Datastore = require('nedb');
+const Profil = require("./app/Profil");
 const app = express()
 const PORT = 3000;
 
 const users = new Datastore({
     filename: 'users.db',
+    autoload: true
+});
+
+const profiles = new Datastore({
+    filename: 'profiles.db',
     autoload: true
 });
 
@@ -18,6 +25,9 @@ app.post("/addUser", function (req, res) {
             res.send({status: false})
         else{
             users.insert(data, function (err, newDoc) {
+                //console.log(newDoc)
+            });
+            profiles.insert(new Profil(data.userName) , function (err, newDoc) {
                 //console.log(newDoc)
             });
             res.send({status: true})  

@@ -13,12 +13,16 @@
     <h1>Statki by MC & MP</h1>
     <h2 id="userName">Witaj </h2>
     <div id="root" style="overflow:hidden; margin: 0;"></div>
+    <button id="play">GRAJ</button>
     <script>
+        let user;
         window.onload = () =>{
             let params = new URLSearchParams(location.search)
-            let user = params.get("user")
+            user = params.get("user")
             document.getElementById("userName").innerText += " " + user;
-            console.log(user)
+        }
+        document.getElementById("play").onclick = () => {
+            window.location.href = "game.html?user=" + user
         }
     </script>
 </body>

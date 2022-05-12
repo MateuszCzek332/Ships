@@ -1,9 +1,12 @@
 let game;
 let net;
 let ui;
+let user;
 window.onload = () => { 
-    console.log("Statki")
+    let params = new URLSearchParams(location.search)
+    user = params.get("user")
     game = new Game();
     net = new Net();
     ui = new Ui();
+    console.log(user)
 }; 
