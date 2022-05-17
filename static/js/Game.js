@@ -25,7 +25,8 @@ class Game {
         this.createMyBoard()
 
         this.selected = null // akualnie wybrany statek, wartosc pocztkowa null
-        this.highlighted = [] // akualnie podswietlane pola
+        this.hlField = null // akualnie podswietlane pola
+        this.hlShip = null //podswietlany statek
 
         document.onclick = (event) => {
 
@@ -36,26 +37,28 @@ class Game {
 
             const intersects = this.raycaster.intersectObjects(this.shipsToSet.children);
             if(intersects.length>0){
-                this.selectShip(intersects[0].object.parent)
+                this.selectShip(intersects[0].object)
             }
         }
 
         document.onmousemove = (event) => {
 
-            this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
-            this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            if(this.selected != null){
+                this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
+                this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-            this.raycaster.setFromCamera(this.mouseVector, this.camera);
+                this.raycaster.setFromCamera(this.mouseVector, this.camera);
 
-            const intersects = this.raycaster.intersectObjects(this.myBoard.children);
+                const intersects = this.raycaster.intersectObjects(this.myBoard.children);
 
-            if(intersects.length == 0)
-                this.unhiglight()
-            else if(this.selected != null){
-                if(this.highlighted.length == 0 || intersects[0].object.position.x != this.highlighted[0].position.x || intersects[0].object.position.z != this.highlighted[0].position.z )
+                if(intersects.length == 0){
+                    this.unhiglightShip()
+                    this.unhiglightField()
+                }
+                else if(this.highlighted == null || intersects[0].object.position.x != this.highlighted.position.x || intersects[0].object.position.z != this.highlighted.position.z )
                     this.higlight(intersects[0].object)
+                
             }
-
         }
 
     }
@@ -64,29 +67,44 @@ class Game {
         if(this.selected != null)
             this.unselectShip()  
 
+        ship.material.color = {r:255, g:0, b:0}
         this.selected = ship
-        for(let i = 0; i<ship.children.length; i++)
-            ship.children[i].material.color = {r:255, g:0, b:0}
     }
 
     unselectShip = () => {
-        for(let i = 0; i< this.selected.children.length; i++)
-            this.selected.children[i].material.color = {r:0, g:0, b:255}
+        this.selected.material.color = {r:0, g:0, b:255}
         this.selected = null
     }
 
     higlight = (field) => {
-        console.log("AAA")
-        this.unhiglight()
+        if(this.hlShip == null){
+            let ship = new Ship(this.selected.dlugosc)
+            ship.position.y = 50
+            ship.position.x = field.position.x -150 + (ship.a * ship.dlugosc - ship.a)/2
+            ship.position.z = field.position.z -200
+            this.scene.add(ship)
+            this.hlShip = ship
+        }
+        else{
+            this.hlShip.position.x = field.position.x -150 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
+            this.hlShip.position.z = field.position.z -200
+        }
+
+        this.unhiglightField()
         field.material.color = {r:255, g:0, b:0}
-        this.highlighted.push(field)
+        this.highlighted = field
     }
 
-    unhiglight = () => {
-        for(let i = 0; i<this.highlighted.length; i++){
-            this.highlighted[i].material.color = {r:0, g:85, b:255}
-        }
-        this.highlighted.length = 0;
+    unhiglightField = () => {
+        if(this.highlighted != null)
+            this.highlighted.material.color = {r:0, g:85, b:255}
+        
+        this.highlighted = null;
+    }
+
+    unhiglightShip = () => {
+        this.scene.remove(this.hlShip)
+        this.hlShip = null;
     }
 
     createMyBoard = () => {
@@ -115,9 +133,9 @@ class Game {
         for(let i = m;i>0; i--){
             for(let j = m+1-i; j>0; j-- ){
                 let statek = new Ship(i)
-                statek.getShip().position.z = zpos
+                statek.position.z = zpos
                 zpos += 60
-                this.shipsToSet.add(statek.getShip()) 
+                this.shipsToSet.add(statek) 
             }
         }
         this.scene.add(this.shipsToSet) 
