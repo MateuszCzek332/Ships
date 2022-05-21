@@ -32,7 +32,8 @@ class Game {
 
         document.getElementById("root").oncontextmenu = (e) => {
             e.preventDefault();
-            this.rotateShip()
+            if(this.hlShip != null)
+                this.rotateShip()
         }
 
         document.onclick = (event) => {
@@ -48,7 +49,6 @@ class Game {
         }
 
         document.onmousemove = (event) => {
-
             if(this.selected != null){
                 //this.test_time = Date.now()
                 this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -113,10 +113,10 @@ class Game {
                                     this.myTab[i][j] = 1
                     }
                 }
-
                 console.log(this.myTab)
                 this.unhiglightField()
                 this.shipsToSet.remove(this.selected)
+                this.checkBoard()
                 this.selected = null
                 this.hlShip = null
             }
@@ -157,6 +157,20 @@ class Game {
         return true
     }
 
+    checkBoard = () => {
+        console.log(this.shipsToSet.children.length)
+        if(this.shipsToSet.children.length == 0 ){
+            this.scene.remove(this.shipsToSet)
+            document.getElementById("enterQueue").style.display = "block"
+            document.getElementById("enterQueue").onclick = () => {
+                this.enterQueue()
+            }
+            document.onclick = null
+            document.onmousemove = null
+
+        }
+    }
+
     selectShip = (ship) => {
         if(this.selected != null)
             this.unselectShip()  
@@ -171,57 +185,10 @@ class Game {
     }
 
     higlight = (field) => {
-        if(this.hlShip == null){
-            let ship = new Ship(this.selected.dlugosc)
-            ship.position.y = 50
-            if(this.orientation){
-                if(field.position.x/50 > 10 - this.selected.dlugosc){
-                    let x  = 10 - this.selected.dlugosc
-                    let z = field.position.z /50
-                    ship.position.x = this.myFields[x][z].position.x - 150 + (ship.a * ship.dlugosc - ship.a)/2
-                    ship.position.z = this.myFields[x][z].position.z - 200
-                }
-                else{
-                    ship.position.x = field.position.x -150 + (ship.a * ship.dlugosc - ship.a)/2
-                    ship.position.z = field.position.z -200
-                }
-            }
-            else{
-                ship.rotate(!this.orientation)
-                if(field.position.z/50 > 10 - this.selected.dlugosc){
-                    let x  = field.position.z /50 
-                    let z = 10 - this.selected.dlugosc
-                    ship.position.x = this.myFields[x][z].position.x - 150 
-                    ship.position.z = this.myFields[x][z].position.z - 200+ (ship.a * ship.dlugosc - ship.a)/2
-                }
-            }
-            this.scene.add(ship)
-            this.hlShip = ship
-        }
-        else{
-            switch(true){
-                case this.orientation && field.position.x/50 <= 10 - this.selected.dlugosc:
-                    this.hlShip.position.x = field.position.x -150 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
-                    this.hlShip.position.z = field.position.z -200
-                    break
-                case this.orientation && field.position.x/50 > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
-                    let x1  = 10 - this.selected.dlugosc
-                    let z1 = field.position.z /50
-                    this.hlShip.position.x = this.myFields[x1][z1].position.x - 150 + (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
-                    this.hlShip.position.z = field.position.z -200
-                    break
-                case !this.orientation && field.position.z/50 <= 10 - this.selected.dlugosc:
-                    this.hlShip.position.x = field.position.x -150 
-                    this.hlShip.position.z = field.position.z -200 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
-                    break
-                case !this.orientation && field.position.z/50 > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
-                    let x2  = field.position.z /50 
-                    let z2 = 10 - this.selected.dlugosc
-                    this.hlShip.position.z = this.myFields[x2][z2].position.z - 200+ (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
-                    this.hlShip.position.x = field.position.x -150 
-                    break
-            }
-        }
+        if(this.hlShip == null)
+            this.respownShip(field)
+        else
+            this.moveShip(field)
 
         this.unhiglightField()
         field.material.color = {r:255, g:0, b:0}
@@ -229,18 +196,71 @@ class Game {
         //console.log(Date.now() - this.test_time)
     }
 
-    rotateShip = () => {
-        if(this.selected != null  && this.hlShip != null){
-            if(this.orientation){
-                this.hlShip.rotate(this.orientation)
-                this.orientation = false
+    respownShip = (field) => {
+        let ship = new Ship(this.selected.dlugosc)
+        ship.position.y = 50
+        if(this.orientation){
+            if(field.position.x/50 > 10 - this.selected.dlugosc){
+                let x  = 10 - this.selected.dlugosc
+                let z = field.position.z /50
+                ship.position.x = this.myFields[x][z].position.x - 150 + (ship.a * ship.dlugosc - ship.a)/2
+                ship.position.z = this.myFields[x][z].position.z - 200
             }
             else{
-                this.hlShip.rotate(this.orientation)
-                this.orientation = true
+                ship.position.x = field.position.x -150 + (ship.a * ship.dlugosc - ship.a)/2
+                ship.position.z = field.position.z -200
             }
         }
-        this.higlight(this.hlField)
+        else{
+            ship.rotate(!this.orientation)
+            if(field.position.z/50 > 10 - this.selected.dlugosc){
+                let x  = field.position.z /50 
+                let z = 10 - this.selected.dlugosc
+                ship.position.x = this.myFields[x][z].position.x - 150 
+                ship.position.z = this.myFields[x][z].position.z - 200+ (ship.a * ship.dlugosc - ship.a)/2
+            }
+        }
+        this.scene.add(ship)
+        this.hlShip = ship
+    }
+
+    moveShip = (field)=> {
+        switch(true){
+            case this.orientation && field.position.x/50 <= 10 - this.selected.dlugosc:
+                this.hlShip.position.x = field.position.x -150 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
+                this.hlShip.position.z = field.position.z -200
+                break
+            case this.orientation && field.position.x/50 > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
+                let x1  = 10 - this.selected.dlugosc
+                let z1 = field.position.z /50
+                this.hlShip.position.x = this.myFields[x1][z1].position.x - 150 + (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
+                this.hlShip.position.z = field.position.z -200
+                break
+            case !this.orientation && field.position.z/50 <= 10 - this.selected.dlugosc:
+                this.hlShip.position.x = field.position.x -150 
+                this.hlShip.position.z = field.position.z -200 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
+                break
+            case !this.orientation && field.position.z/50 > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
+                let x2  = field.position.z /50 
+                let z2 = 10 - this.selected.dlugosc
+                this.hlShip.position.z = this.myFields[x2][z2].position.z - 200+ (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
+                this.hlShip.position.x = field.position.x -150 
+                break
+        }
+    }
+
+    rotateShip = () => {
+
+        if(this.orientation){
+            this.hlShip.rotate(this.orientation)
+            this.orientation = false
+        }
+        else{
+            this.hlShip.rotate(this.orientation)
+            this.orientation = true
+        }
+
+        this.moveShip(this.hlField)
         console.log(this.orientation)
     }
 
@@ -290,6 +310,10 @@ class Game {
             }
         }
         this.scene.add(this.shipsToSet) 
+    }
+
+    enterQueue = ()=> {
+        console.log("ping na serwer")
     }
 
     render = () => {

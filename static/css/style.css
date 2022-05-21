@@ -1,3 +1,9 @@
 h1{
     color: blue;
 }
+#enterQueue{
+    position: absolute;
+    display: none;
+    bottom: 50px;
+    left: 40%;
+}
