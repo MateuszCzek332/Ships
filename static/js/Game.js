@@ -113,7 +113,6 @@ class Game {
                                     this.myTab[i][j] = 1
                     }
                 }
-                console.log(this.myTab)
                 this.unhiglightField()
                 this.shipsToSet.remove(this.selected)
                 this.checkBoard()
@@ -158,16 +157,10 @@ class Game {
     }
 
     checkBoard = () => {
-        console.log(this.shipsToSet.children.length)
         if(this.shipsToSet.children.length == 0 ){
+            
             this.scene.remove(this.shipsToSet)
-            document.getElementById("enterQueue").style.display = "block"
-            document.getElementById("enterQueue").onclick = () => {
-                this.enterQueue()
-            }
-            document.onclick = null
-            document.onmousemove = null
-
+            ui.enterQueue(this.myTab)
         }
     }
 
@@ -259,9 +252,7 @@ class Game {
             this.hlShip.rotate(this.orientation)
             this.orientation = true
         }
-
         this.moveShip(this.hlField)
-        console.log(this.orientation)
     }
 
     unhiglightField = () => {
@@ -310,10 +301,6 @@ class Game {
             }
         }
         this.scene.add(this.shipsToSet) 
-    }
-
-    enterQueue = ()=> {
-        console.log("ping na serwer")
     }
 
     render = () => {

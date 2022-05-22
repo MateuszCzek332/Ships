@@ -1,5 +1,5 @@
 const express = require("express")
-const profil = require("./app/Profil")
+const Room = require("./app/Room")
 const Datastore = require('nedb');
 const Profil = require("./app/Profil");
 const app = express()
@@ -14,6 +14,8 @@ const profiles = new Datastore({
     filename: 'profiles.db',
     autoload: true
 });
+
+let rooms = []
 
 app.use(express.text())
 app.post("/addUser", function (req, res) {
@@ -46,6 +48,40 @@ app.post("/loginUser", function (req, res) {
             data.status = false
         res.send(data)
     });
+})
+
+app.post("/joinQueue", function (req, res) {
+
+    let data = JSON.parse(req.body)
+    if(rooms.length == 0 || !rooms[rooms.length-1].canJoin )
+        rooms.push(new Room(data.userName, data.userTab))
+    else
+        rooms[rooms.length-1].join( data.userName, data.userTab )
+
+    console.log(rooms.length)
+    
+    res.send(data)
+
+})
+
+app.post("/checkQueue", function (req, res) {
+
+    let data = JSON.parse(req.body)
+    console.log(data)
+    odp = {
+        status: false,
+        user: null
+    }
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName) && !rooms[i].canJoin){
+            odp.status = true
+            odp.user = rooms[i].lastMove 
+        }
+    }
+
+    res.send(odp)
+
 })
 
 app.use(express.static('static'))
