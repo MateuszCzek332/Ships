@@ -17,7 +17,7 @@ class Net {
 
         fetch("/joinQueue", options)
             .then(response => response.json())
-            .then(mess => this.checkQueue())
+            .then(this.checkQueue())
             .catch(error => console.log(error));
 
     }
@@ -28,9 +28,11 @@ class Net {
         let checking = setInterval(async () => {
 
             let w = await this.checkFetchPostAsync()
-            console.log(w)
             if(w.status){
                 clearInterval(checking)
+                ui.start(w)
+                console.log(w)
+                game.start(w.lastMove)
             }
 
 
@@ -49,6 +51,54 @@ class Net {
         };
 
         let response = await fetch("/checkQueue", options)
+
+        if (!response.ok)
+            return response.status
+        else
+            return await response.json()
+    }
+
+    shootFetchPostAsync = async (data) => {
+
+        const options = {
+            method: "POST",
+            body: JSON.stringify(data)
+        };
+
+        let response = await fetch("/game/shoot", options)
+
+        if (!response.ok)
+            return response.status
+        else
+            return await response.json()
+    }
+
+    checkLastMove = () => { 
+
+        let checking = setInterval(async () => {
+
+            let w = await this.checkLastMoveFetchPostAsync()
+            if(w.userName != user){
+                game.enemyMove(w)
+                clearInterval(checking)
+            }
+
+
+        },1000)
+    }
+
+    checkLastMoveFetchPostAsync = async () => {
+
+        let data = {
+            userName: user,
+        }
+
+        const options = {
+            method: "POST",
+            body: JSON.stringify(data)
+        };
+
+        let response = await fetch("/game/lastMove", options)
 
         if (!response.ok)
             return response.status

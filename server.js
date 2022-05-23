@@ -67,16 +67,56 @@ app.post("/joinQueue", function (req, res) {
 app.post("/checkQueue", function (req, res) {
 
     let data = JSON.parse(req.body)
-    console.log(data)
     odp = {
         status: false,
-        user: null
     }
 
     for(let i = 0; i<rooms.length; i++){
         if(rooms[i].isHere(data.userName) && !rooms[i].canJoin){
             odp.status = true
-            odp.user = rooms[i].lastMove 
+            odp.lastMove = rooms[i].lastMove 
+            odp.player1 = rooms[i].player1
+            odp.player2 = rooms[i].player2
+            break
+        }
+    }
+
+    res.send(odp)
+
+})
+
+app.post("/game/shoot", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    let odp = {
+        shooted: false
+    }
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName)){
+            if(rooms[i].player1 == data.userName && rooms[i].player2Tab[data.x][data.z] ==2 )
+                odp.shooted = true;
+            else if(rooms[i].player2 == data.userName && rooms[i].player1Tab[data.x][data.z] ==2 )
+                odp.shooted = true;
+
+            rooms[i].lastMove = data
+        }
+    }
+    res.send(odp)
+
+})
+
+app.post("/game/lastMove", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    let odp
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName)){
+            odp = rooms[i].lastMove
+            break
         }
     }
 

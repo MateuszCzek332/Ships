@@ -13,7 +13,11 @@ module.exports = class Room {
         this.player2Tab = tab2
         this.canJoin = false
 
-        this.lastMove = player2
+        this.lastMove  = {
+            userName: player2,
+            x: null,
+            z: null
+        }
     }
 
     isHere = (user) => {
