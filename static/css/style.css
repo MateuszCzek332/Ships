@@ -7,3 +7,15 @@ h1{
     bottom: 50px;
     left: 40%;
 }
+
+#endGame{
+    position: absolute;
+    display: none;
+    top: 30%; 
+    left: 45%;
+}
+
+#endMess{
+    font-size: 20px;
+    font-weight: bold;
+}

@@ -1,5 +1,5 @@
 const express = require("express")
-const profil = require("./app/Profil")
+const Room = require("./app/Room")
 const Datastore = require('nedb');
 const Profil = require("./app/Profil");
 const app = express()
@@ -14,6 +14,8 @@ const profiles = new Datastore({
     filename: 'profiles.db',
     autoload: true
 });
+
+let rooms = []
 
 app.use(express.text())
 app.post("/addUser", function (req, res) {
@@ -46,6 +48,99 @@ app.post("/loginUser", function (req, res) {
             data.status = false
         res.send(data)
     });
+})
+
+app.post("/joinQueue", function (req, res) {
+
+    let data = JSON.parse(req.body)
+    if(rooms.length == 0 || !rooms[rooms.length-1].canJoin )
+        rooms.push(new Room(data.userName, data.userTab))
+    else
+        rooms[rooms.length-1].join( data.userName, data.userTab )
+
+    console.log(rooms.length)
+    
+    res.send(data)
+
+})
+
+app.post("/checkQueue", function (req, res) {
+
+    let data = JSON.parse(req.body)
+    odp = {
+        status: false,
+    }
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName) && !rooms[i].canJoin){
+            odp.status = true
+            odp.lastMove = rooms[i].lastMove 
+            odp.player1 = rooms[i].player1
+            odp.player2 = rooms[i].player2
+            break
+        }
+    }
+
+    res.send(odp)
+
+})
+
+app.post("/game/shoot", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    let odp = {
+        shooted: false
+    }
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName)){
+            if(rooms[i].player1 == data.userName && rooms[i].player2Tab[data.x][data.z] ==2 )
+                odp.shooted = true;
+            else if(rooms[i].player2 == data.userName && rooms[i].player1Tab[data.x][data.z] ==2 )
+                odp.shooted = true;
+
+            rooms[i].lastMove = data
+        }
+    }
+    res.send(odp)
+
+})
+
+app.post("/game/lastMove", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    let odp
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName)){
+            odp = rooms[i].lastMove
+            break
+        }
+    }
+
+    res.send(odp)
+
+})
+
+app.post("/game/end", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    console.log(data)
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.winner)){
+            rooms.splice(i, 1);
+            break
+        }
+    }
+
+    console.log(rooms)
+
+    res.send(data)
+
 })
 
 app.use(express.static('static'))
