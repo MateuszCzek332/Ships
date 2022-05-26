@@ -31,7 +31,6 @@ class Net {
             if(w.status){
                 clearInterval(checking)
                 ui.start(w)
-                console.log(w)
                 game.start(w.lastMove)
             }
 
@@ -106,5 +105,25 @@ class Net {
             return await response.json()
     }
     
+    win = async () => {
+
+        const data = {
+            winner: user,
+            loser:enemy,
+            winnerPkt: game.myPkt,
+            loserPkt: game.enemyPkt
+        } 
+
+        const options = {
+            method: "POST",
+            body: JSON.stringify(data)
+        };
+
+        setTimeout( async() => {
+            await fetch("/game/end", options)
+        }, 1000)
+
+
+    }
 
 }

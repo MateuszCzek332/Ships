@@ -2,6 +2,9 @@ class Ui {
  
     constructor() {
         this.queueButton = document.getElementById("enterQueue")
+        this.endGameScrean = document.getElementById("endGame")
+        this.endGameMess = document.getElementById("endMess")
+        this.endGameButton = document.getElementById("endButton")
     }
 
     enterQueue = (tab) => {
@@ -17,9 +20,29 @@ class Ui {
 
     start = (mess) => {
         if(mess.player1 == user)
-            console.log("enemy to: " + mess.player2)
+            enemy = mess.player2
         else
-            console.log("enemy to: " + mess.player1)
+            enemy = mess.player1
+        
+        console.log("enemy to: " + enemy)
+    
+    }
+
+    win = () => {
+        console.log("XD")
+        this.endGameMess.innerText = "WYGRAŁEŚ"
+        this.endGameScrean.style.display = "block"
+        this.endGameButton.onclick = () => {
+            window.location.href = "profile.html?user=" + user
+        }
+    }
+
+    lose = () => {
+        this.endGameMess.innerText = "PRZEGRAŁEŚ"    
+        this.endGameScrean.style.display = "block"
+        this.endGameButton.onclick = () => {
+            window.location.href = "profile.html?user=" + user
+        }
     }
 
 }

@@ -25,6 +25,9 @@ class Game {
         this.createShipsToSet()
         this.createMyBoard()
 
+
+        this.myPkt = 0
+        this.enemyPkt = 0
         this.orientation = true; // orientacja statku do postawienia - true poziomy, false pionowy
         this.selected = null // akualnie wybrany statek, wartosc pocztkowa null
         this.hlField = null // akualnie podswietlane pola
@@ -303,9 +306,11 @@ class Game {
                 let w = await net.shootFetchPostAsync(m)
                 this.move = false
 
-                if(w.shooted)
+                if(w.shooted){
                     intersects[0].object.material.color = {r:255, g:0, b:0}
-                else
+                    this.myPkt++
+                    this.checkWin()
+                }else
                     intersects[0].object.material.color = {r:0, g:255, b:0}
                 intersects[0].object.canShoot = false
 
@@ -316,8 +321,11 @@ class Game {
 
     enemyMove = (w) => {
 
-        if(this.myTab[w.x][w.z] == 2)
+        if(this.myTab[w.x][w.z] == 2){
             this.myFields[w.x][w.z].material.color = {r:255, g:0, b:0}
+            this.enemyPkt++
+            this.checkWin()
+        }    
         else
             this.myFields[w.x][w.z].material.color = {r:0, g:255, b:0}
         
@@ -346,6 +354,28 @@ class Game {
         this.enemyBoard.position.x = 270
         this.enemyBoard.position.z = -200
         this.scene.add(this.enemyBoard)
+    }
+
+    checkWin = () => {
+        if(this.myPkt == 3)
+            this.win()
+        else if( this.enemyPkt == 3)
+            this.lose()
+    }
+
+
+    win = () => {
+        this.move = false
+        document.onclick = null
+        net.win()
+        ui.win()
+    }
+
+    
+    lose = () => {
+        this.move = false
+        document.onclick = null
+        ui.lose()
     }
 
     createMyBoard = () => {

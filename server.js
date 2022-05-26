@@ -124,6 +124,25 @@ app.post("/game/lastMove", function (req, res) {
 
 })
 
+app.post("/game/end", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    console.log(data)
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.winner)){
+            rooms.splice(i, 1);
+            break
+        }
+    }
+
+    console.log(rooms)
+
+    res.send(data)
+
+})
+
 app.use(express.static('static'))
 
 app.listen(PORT, function () {
