@@ -12,7 +12,10 @@
 <body style="padding: 0; margin:0;">
     <h1>Statki by MC & MP</h1>
     <h2 id="userName">Witaj </h2>
-    <div id="root" style="overflow:hidden; margin: 0;"></div>
+    <div id="bilans">wygrane <span id="wins"></span>  -  <span id="loses"></span> przegrane</div><br>
+    <p>Historia gier</p>
+    <table id="matchHistory">
+    </table>
     <button id="play">GRAJ</button>
     <script>
         let user;
@@ -20,10 +23,52 @@
             let params = new URLSearchParams(location.search)
             user = params.get("user")
             document.getElementById("userName").innerText += " " + user;
+            init();
         }
         document.getElementById("play").onclick = () => {
             window.location.href = "game.html?user=" + user
         }
+
+        let init = () =>{ 
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify({profile: user})
+            };
+
+            fetch("/user/profile", options)
+                .then(response => response.json())
+                .then(data => genProfile(data))
+                .catch(error => console.log(error));
+
+        }
+
+        genProfile = (data)=> {
+            document.getElementById("wins").innerText = data.wins
+            document.getElementById("loses").innerText = data.loses
+            let table = document.getElementById("matchHistory")
+            data.history.forEach(el => {
+                let tr = document.createElement("tr")
+                    let winner =  document.createElement("td")
+                    let winnerPkt = document.createElement("td")
+                    let loserPkt = document.createElement("td")
+                    let loser = document.createElement("td")
+                    winner.innerText = el.winner
+                    winnerPkt.innerText = el.winnerPkt
+                    loserPkt.innerText = el.loserPkt
+                    loser.innerText = el.loser
+                    tr.appendChild(winner)
+                    tr.appendChild(winnerPkt)
+                    tr.appendChild(loserPkt)
+                    tr.appendChild(loser)
+                if(el.winner == user)
+                    tr.style.backgroundColor = "green"
+                else
+                    tr.style.backgroundColor = "red"
+                table.appendChild(tr)
+            });
+        }
+
     </script>
 </body>
 </html>

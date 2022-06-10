@@ -137,9 +137,51 @@ app.post("/game/end", function (req, res) {
         }
     }
 
-    console.log(rooms)
+    profiles.findOne({userName: data.winner},function(e,doc){
+        profiles.update({userName: data.winner},{$set:{"wins":doc.wins +1}, $pop: { history: data } },function(err,sonuc){
+            if(err)
+                console.log(err)
+        });
+
+    });
+
+    profiles.findOne({userName: data.loser},function(e,doc){
+        profiles.update({userName: data.loser},{$set:{"loses":doc.loses +1}, $pop: { history: data }},function(err,sonuc){
+            if(err)
+                console.log(err)
+        });
+
+    })
+
 
     res.send(data)
+
+})
+
+app.post("/game/lastMove", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    let odp
+
+    for(let i = 0; i<rooms.length; i++){
+        if(rooms[i].isHere(data.userName)){
+            odp = rooms[i].lastMove
+            break
+        }
+    }
+
+    res.send(odp)
+
+})
+
+app.post("/user/profile", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    profiles.findOne({userName: data.profile},function(e,doc){
+        res.send(doc)
+    });
 
 })
 

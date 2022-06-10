@@ -1,1 +1,3 @@
-{"userName":"qwer","wins":0,"loses":0,"history":[],"_id":"z6GX87fvZOiaDfjO"}
+{"userName":"zxcv","wins":0,"loses":2,"history":[{"winner":"qwer","loser":"zxcv","winnerPkt":3,"loserPkt":0},{"winner":"qwer","loser":"zxcv","winnerPkt":3,"loserPkt":2}],"_id":"c6GX87fvZOiaDfjO"}
+{"userName":"asdf","wins":0,"loses":0,"history":[],"_id":"x6GX87fvZOiaDfjO"}
+{"userName":"qwer","wins":2,"loses":0,"history":[{"winner":"qwer","loser":"zxcv","winnerPkt":3,"loserPkt":0},{"winner":"qwer","loser":"zxcv","winnerPkt":3,"loserPkt":2}],"_id":"z6GX87fvZOiaDfjO"}
