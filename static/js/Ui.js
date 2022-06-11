@@ -5,6 +5,8 @@ class Ui {
         this.endGameScrean = document.getElementById("endGame")
         this.endGameMess = document.getElementById("endMess")
         this.endGameButton = document.getElementById("endButton")
+        this.move = document.getElementById("move")
+        this.time = document.getElementById("time")
     }
 
     enterQueue = (tab) => {
@@ -29,7 +31,6 @@ class Ui {
     }
 
     win = () => {
-        console.log("XD")
         this.endGameMess.innerText = "WYGRAŁEŚ"
         this.endGameScrean.style.display = "block"
         this.endGameButton.onclick = () => {

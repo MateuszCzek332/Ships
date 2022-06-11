@@ -86,6 +86,28 @@ class Net {
         },1000)
     }
 
+    surender = async () => {
+
+        ui.lose();
+
+        let data = {
+            userName: user,
+            surender: true
+        }
+
+        const options = {
+            method: "POST",
+            body: JSON.stringify(data)
+        };
+
+        let response = await fetch("/game/surender", options)
+
+        if (!response.ok)
+            return response.status
+        else
+            return await response.json()
+    }
+
     checkLastMoveFetchPostAsync = async () => {
 
         let data = {

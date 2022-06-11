@@ -19,3 +19,11 @@ h1{
     font-size: 20px;
     font-weight: bold;
 }
+#move{
+    position: absolute;
+    left: 45%;
+}
+#time{
+    position: absolute;
+    left: 55%;
+}

@@ -124,6 +124,18 @@ app.post("/game/lastMove", function (req, res) {
 
 })
 
+app.post("/game/surender", function (req, res) {
+
+    let data = JSON.parse(req.body)
+
+    for(let i = 0; i<rooms.length; i++)
+        if(rooms[i].isHere(data.userName))
+            rooms[i].lastMove = data
+
+    res.send(data)
+
+})
+
 app.post("/game/end", function (req, res) {
 
     let data = JSON.parse(req.body)
@@ -138,7 +150,7 @@ app.post("/game/end", function (req, res) {
     }
 
     profiles.findOne({userName: data.winner},function(e,doc){
-        profiles.update({userName: data.winner},{$set:{"wins":doc.wins +1}, $pop: { history: data } },function(err,sonuc){
+        profiles.update({userName: data.winner},{$set:{"wins":doc.wins +1}, $push: { history: data } },function(err,sonuc){
             if(err)
                 console.log(err)
         });
@@ -146,13 +158,12 @@ app.post("/game/end", function (req, res) {
     });
 
     profiles.findOne({userName: data.loser},function(e,doc){
-        profiles.update({userName: data.loser},{$set:{"loses":doc.loses +1}, $pop: { history: data }},function(err,sonuc){
+        profiles.update({userName: data.loser},{$set:{"loses":doc.loses +1}, $push: { history: data }},function(err,sonuc){
             if(err)
                 console.log(err)
         });
 
     })
-
 
     res.send(data)
 

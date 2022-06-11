@@ -299,11 +299,15 @@ class Game {
 
                 let m = {
                     userName: user,
+                    surender: false,
                     x: intersects[0].object.x,
                     z: intersects[0].object.z
                 }
 
                 let w = await net.shootFetchPostAsync(m)
+                clearInterval(this.timer)
+                ui.move.innerText = "ruch przeciwnika"
+                ui.time.innerText = ""
                 this.move = false
 
                 if(w.shooted){
@@ -321,6 +325,9 @@ class Game {
 
     enemyMove = (w) => {
 
+        if(w.surender)
+            this.win()
+
         if(this.myTab[w.x][w.z] == 2){
             this.myFields[w.x][w.z].material.color = {r:255, g:0, b:0}
             this.enemyPkt++
@@ -329,6 +336,7 @@ class Game {
         else
             this.myFields[w.x][w.z].material.color = {r:0, g:255, b:0}
         
+        this.myTimer()
         this.move = true
     }
 
@@ -337,10 +345,29 @@ class Game {
         document.onclick = (e) => {
             this.shoot(e)
         }
-        if(w.userName != user)
+        if(w.userName != user){
             this.move = true
+            this.myTimer()
+        }
         else
             net.checkLastMove()
+    }
+
+    myTimer = () => { 
+
+        ui.move.innerText = "twoj ruch"
+        this.time = 5;
+        this.timer = setInterval(async () => {
+
+            ui.time.innerText = this.time
+            this.time--;
+            if(this.time<0){
+                net.surender()
+                ui.lose();
+                clearInterval(this.timer)
+            }
+
+        },1000)
     }
 
     createEnemyBoard = () => {
