@@ -15,7 +15,7 @@ class Net {
             body: JSON.stringify(data)
         };
 
-        fetch("/joinQueue", options)
+        fetch("/queue/join", options)
             .then(response => response.json())
             .then(this.checkQueue())
             .catch(error => console.log(error));
@@ -49,7 +49,7 @@ class Net {
             body: JSON.stringify(data)
         };
 
-        let response = await fetch("/checkQueue", options)
+        let response = await fetch("/queue/check", options)
 
         if (!response.ok)
             return response.status

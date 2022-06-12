@@ -318,11 +318,12 @@ class Game {
                     intersects[0].object.material.color = {r:255, g:0, b:0}
                     this.myPkt++
                     this.checkWin()
-                }else
+                }else{
                     intersects[0].object.material.color = {r:0, g:255, b:0}
+                    net.checkLastMove()
+                }
                 intersects[0].object.canShoot = false
 
-                net.checkLastMove()
             }
         }
     }
@@ -335,7 +336,7 @@ class Game {
         if(this.myTab[w.x][w.z] == 2){
             this.myFields[w.x][w.z].material.color = {r:255, g:0, b:0}
             this.enemyPkt++
-            this.checkWin()
+            this.checkLose()
         }    
         else
             this.myFields[w.x][w.z].material.color = {r:0, g:255, b:0}
@@ -377,7 +378,12 @@ class Game {
     checkWin = () => {
         if(this.myPkt == 3)
             this.win()
-        else if( this.enemyPkt == 3)
+        else 
+            net.checkLastMove()
+    }
+
+    checkLose = () => {
+        if( this.enemyPkt == 3)
             this.lose()
     }
 

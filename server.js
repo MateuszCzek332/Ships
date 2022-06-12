@@ -1,21 +1,11 @@
+const gameController = require("./app/gameContreoller.js")
+const queueController = require("./app/queueContreoller.js")
+const userController = require("./app/userContreoller.js")
+const dataBases = require("./app/dataBases")
 const express = require("express")
-const Room = require("./app/Room")
-const Datastore = require('nedb');
 const Profil = require("./app/Profil");
 const app = express()
 const PORT = 3000;
-
-const users = new Datastore({
-    filename: 'users.db',
-    autoload: true
-});
-
-const profiles = new Datastore({
-    filename: 'profiles.db',
-    autoload: true
-});
-
-let rooms = []
 
 app.use(express.text())
 app.post("/addUser", function (req, res) {
@@ -50,88 +40,46 @@ app.post("/loginUser", function (req, res) {
     });
 })
 
-app.post("/joinQueue", function (req, res) {
+app.post("/user/profile", function (req, res) {
 
     let data = JSON.parse(req.body)
-    if(rooms.length == 0 || !rooms[rooms.length-1].canJoin )
-        rooms.push(new Room(data.userName, data.userTab))
-    else
-        rooms[rooms.length-1].join( data.userName, data.userTab )
 
-    console.log(rooms.length)
-    
-    res.send(data)
+    dataBases.profiles.findOne({userName: data.profile},function(e,doc){
+        res.send(doc)
+    });
 
 })
 
-app.post("/checkQueue", function (req, res) {
-
+app.post("/queue/join", function (req, res) {
     let data = JSON.parse(req.body)
-    odp = {
-        status: false,
-    }
+    let ans = queueController.join(data)
+    res.send(ans)
+})
 
-    for(let i = 0; i<rooms.length; i++){
-        if(rooms[i].isHere(data.userName) && !rooms[i].canJoin){
-            odp.status = true
-            odp.lastMove = rooms[i].lastMove 
-            odp.player1 = rooms[i].player1
-            odp.player2 = rooms[i].player2
-            break
-        }
-    }
-
-    res.send(odp)
-
+app.post("/queue/check", function (req, res) {
+    let data = JSON.parse(req.body)
+    let ans = queueController.check(data)
+    res.send(ans)
 })
 
 app.post("/game/shoot", function (req, res) {
 
     let data = JSON.parse(req.body)
-
-    let odp = {
-        shooted: false
-    }
-
-    for(let i = 0; i<rooms.length; i++){
-        if(rooms[i].isHere(data.userName)){
-            if(rooms[i].player1 == data.userName && rooms[i].player2Tab[data.x][data.z] ==2 )
-                odp.shooted = true;
-            else if(rooms[i].player2 == data.userName && rooms[i].player1Tab[data.x][data.z] ==2 )
-                odp.shooted = true;
-
-            rooms[i].lastMove = data
-        }
-    }
-    res.send(odp)
-
+    let ans = gameController.shoot(data)
+    res.send(ans)
 })
 
 app.post("/game/lastMove", function (req, res) {
-
     let data = JSON.parse(req.body)
-
-    let odp
-
-    for(let i = 0; i<rooms.length; i++){
-        if(rooms[i].isHere(data.userName)){
-            odp = rooms[i].lastMove
-            break
-        }
-    }
-
-    res.send(odp)
+    let ans  =gameController.checkLastMohe(data)
+    res.send(ans)
 
 })
 
 app.post("/game/surender", function (req, res) {
 
     let data = JSON.parse(req.body)
-
-    for(let i = 0; i<rooms.length; i++)
-        if(rooms[i].isHere(data.userName))
-            rooms[i].lastMove = data
-
+    gameController.surender(data)
     res.send(data)
 
 })
@@ -139,62 +87,11 @@ app.post("/game/surender", function (req, res) {
 app.post("/game/end", function (req, res) {
 
     let data = JSON.parse(req.body)
-
-    console.log(data)
-
-    for(let i = 0; i<rooms.length; i++){
-        if(rooms[i].isHere(data.winner)){
-            rooms.splice(i, 1);
-            break
-        }
-    }
-
-    profiles.findOne({userName: data.winner},function(e,doc){
-        profiles.update({userName: data.winner},{$set:{"wins":doc.wins +1}, $push: { history: data } },function(err,sonuc){
-            if(err)
-                console.log(err)
-        });
-
-    });
-
-    profiles.findOne({userName: data.loser},function(e,doc){
-        profiles.update({userName: data.loser},{$set:{"loses":doc.loses +1}, $push: { history: data }},function(err,sonuc){
-            if(err)
-                console.log(err)
-        });
-
-    })
-
+    gameController.end(data)
     res.send(data)
 
 })
 
-app.post("/game/lastMove", function (req, res) {
-
-    let data = JSON.parse(req.body)
-
-    let odp
-
-    for(let i = 0; i<rooms.length; i++){
-        if(rooms[i].isHere(data.userName)){
-            odp = rooms[i].lastMove
-            break
-        }
-    }
-
-    res.send(odp)
-
-})
-
-app.post("/user/profile", function (req, res) {
-
-    let data = JSON.parse(req.body)
-
-    profiles.findOne({userName: data.profile},function(e,doc){
-        res.send(doc)
-    });
-
-})
 
 app.use(express.static('static'))
 
