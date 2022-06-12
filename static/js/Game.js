@@ -1,7 +1,7 @@
 class Game {
 
     constructor() {
-        //this.frames = 0
+        this.frames = 0
         //this.test_time = 0;
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45, 4 / 3, 0.1, 10000);
@@ -70,10 +70,10 @@ class Game {
                 
             }
         }
-        // setInterval(()=>{
-        //     console.log(this.frames)
-        //     this.frames = 0
-        // }, 1000)
+        setInterval(()=>{
+            console.log(this.frames)
+            this.frames = 0
+        }, 1000)
     }
 
     clickToSelect = () =>{
@@ -214,7 +214,7 @@ class Game {
         if(this.orientation){
             if(field.position.x/50 > 10 - this.selected.dlugosc){
                 let x  = 10 - this.selected.dlugosc
-                let z = field.position.z /50
+                let z = field.z
                 ship.position.x = this.myFields[x][z].position.x - 400 + (ship.a * ship.dlugosc - ship.a)/2
                 ship.position.z = this.myFields[x][z].position.z - 200
             }
@@ -226,11 +226,16 @@ class Game {
         else{
             ship.rotate(!this.orientation)
             if(field.position.z/50 > 10 - this.selected.dlugosc){
-                let x  = field.position.z /50 
-                let z = 10 - this.selected.dlugosc
-                ship.position.x = this.myFields[x][z].position.x - 400 
-                ship.position.z = this.myFields[x][z].position.z - 200+ (ship.a * ship.dlugosc - ship.a)/2
+                let z  = field.position.z /50 
+                let x = 10 - this.selected.dlugosc
+                ship.position.z = this.myFields[z][x].position.z - 200+ (ship.a * ship.dlugosc - ship.a)/2
+                ship.position.x = field.position.x -400 
             }
+            else{
+                ship.position.x = field.position.x -400 
+                ship.position.z = field.position.z -200 + (ship.a * ship.dlugosc - ship.a)/2 
+            }
+            
         }
         this.scene.add(ship)
         this.hlShip = ship
@@ -238,24 +243,24 @@ class Game {
 
     moveShip = (field)=> {
         switch(true){
-            case this.orientation && field.position.x/50 <= 10 - this.selected.dlugosc:
+            case this.orientation && field.x <= 10 - this.selected.dlugosc:
                 this.hlShip.position.x = field.position.x -400 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
                 this.hlShip.position.z = field.position.z -200
                 break
-            case this.orientation && field.position.x/50 > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
+            case this.orientation && field.x > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
                 let x1  = 10 - this.selected.dlugosc
-                let z1 = field.position.z /50
+                let z1 = field.z
                 this.hlShip.position.x = this.myFields[x1][z1].position.x - 400 + (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
                 this.hlShip.position.z = field.position.z -200
                 break
-            case !this.orientation && field.position.z/50 <= 10 - this.selected.dlugosc:
+            case !this.orientation && field.z <= 10 - this.selected.dlugosc:
                 this.hlShip.position.x = field.position.x -400 
                 this.hlShip.position.z = field.position.z -200 + (this.hlShip.a * this.hlShip.dlugosc -this.hlShip.a)/2 
                 break
-            case !this.orientation && field.position.z/50 > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
-                let x2  = field.position.z /50 
-                let z2 = 10 - this.selected.dlugosc
-                this.hlShip.position.z = this.myFields[x2][z2].position.z - 200+ (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
+            case !this.orientation && field.z > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
+                let z2  = field.z
+                let x2 = 10 - this.selected.dlugosc
+                this.hlShip.position.z = this.myFields[z2][x2].position.z - 200+ (this.hlShip.a * this.hlShip.dlugosc - this.hlShip.a)/2
                 this.hlShip.position.x = field.position.x -400 
                 break
         }
@@ -290,12 +295,15 @@ class Game {
         if(this.move){
             this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
             this.raycaster.setFromCamera(this.mouseVector, this.camera);
-
             const intersects = this.raycaster.intersectObjects(this.enemyBoard.children);
 
             if(intersects.length>0 && intersects[0].object.canShoot){
+
+                clearInterval(this.timer)
+                this.move = false
+                ui.move.innerText = "ruch przeciwnika"
+                ui.time.innerText = ""
 
                 let m = {
                     userName: user,
@@ -305,10 +313,6 @@ class Game {
                 }
 
                 let w = await net.shootFetchPostAsync(m)
-                clearInterval(this.timer)
-                ui.move.innerText = "ruch przeciwnika"
-                ui.time.innerText = ""
-                this.move = false
 
                 if(w.shooted){
                     intersects[0].object.material.color = {r:255, g:0, b:0}
@@ -370,26 +374,12 @@ class Game {
         },1000)
     }
 
-    createEnemyBoard = () => {
-        this.enemyBoard = new THREE.Object3D();
-        for(let i = 0; i < 10; i++){
-            for(let j = 0; j<10; j++){
-                let field =  new EnemyField(i, j)
-                this.enemyBoard.add(field)
-            }
-        }
-        this.enemyBoard.position.x = 270
-        this.enemyBoard.position.z = -200
-        this.scene.add(this.enemyBoard)
-    }
-
     checkWin = () => {
         if(this.myPkt == 3)
             this.win()
         else if( this.enemyPkt == 3)
             this.lose()
     }
-
 
     win = () => {
         this.move = false
@@ -398,13 +388,23 @@ class Game {
         ui.win()
     }
 
-    
     lose = () => {
         this.move = false
         document.onclick = null
         ui.lose()
     }
-
+        // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu
+    createEnemyBoard = () => {
+        this.enemyBoard = new THREE.Object3D();
+        for(let i = 0; i < 10; i++)
+            for(let j = 0; j<10; j++)
+                this.enemyBoard.add(new EnemyField(i, j))
+        
+        this.enemyBoard.position.x = 270
+        this.enemyBoard.position.z = -200
+        this.scene.add(this.enemyBoard)
+    }
+    //tworzenie planszy gracza do stawiania statków oraz tablicy trzymającej informacje o położeniu statków
     createMyBoard = () => {
         this.myBoard = new THREE.Object3D();
         this.myFields = [];
@@ -414,35 +414,34 @@ class Game {
             this.myTab[i] = []
             for(let j = 0; j<10; j++){
                 this.myTab[i][j] = 0
-                let field =  new MyField()
-                field.getCube().position.set(i*field.a, 0, j*field.a)
-                this.myFields[i][j] = field.getCube()
-                this.myBoard.add(this.myFields[i][j])
+                let field =  new MyField(i, j)
+                this.myFields[i][j] = field
+                this.myBoard.add(field)
             }
         }
         this.myBoard.position.x = -400
         this.myBoard.position.z = -200
         this.scene.add(this.myBoard)
     }
-
+    // tworzenie listy statków do rozstawienia
     createShipsToSet = () => {
         this.shipsToSet = new THREE.Object3D();
         this.shipsToSet.position.x = -700
         let m = 4 //ilosc pol najwiekszego statku 
         let zpos = -250 //wartosc pozycji z pierwszego statku 
-        for(let i = m;i>0; i--){
+        for(let i = m;i>0; i--)
             for(let j = m+1-i; j>0; j-- ){
                 let statek = new Ship(i)
                 statek.position.z = zpos
                 zpos += 60
                 this.shipsToSet.add(statek) 
             }
-        }
+        
         this.scene.add(this.shipsToSet) 
     }
 
     render = () => {
-        // this.frames++
+        this.frames++
         requestAnimationFrame(this.render);
         this.renderer.render(this.scene, this.camera);
         //console.log("render leci")
