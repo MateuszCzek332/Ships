@@ -15,7 +15,7 @@ class Net {
             body: JSON.stringify(data)
         };
 
-        fetch("/joinQueue", options)
+        fetch("/queue/join", options)
             .then(response => response.json())
             .then(this.checkQueue())
             .catch(error => console.log(error));
@@ -49,7 +49,7 @@ class Net {
             body: JSON.stringify(data)
         };
 
-        let response = await fetch("/checkQueue", options)
+        let response = await fetch("/queue/check", options)
 
         if (!response.ok)
             return response.status
@@ -86,6 +86,28 @@ class Net {
         },1000)
     }
 
+    surender = async () => {
+
+        ui.lose();
+
+        let data = {
+            userName: user,
+            surender: true
+        }
+
+        const options = {
+            method: "POST",
+            body: JSON.stringify(data)
+        };
+
+        let response = await fetch("/game/surender", options)
+
+        if (!response.ok)
+            return response.status
+        else
+            return await response.json()
+    }
+
     checkLastMoveFetchPostAsync = async () => {
 
         let data = {
@@ -109,7 +131,7 @@ class Net {
 
         const data = {
             winner: user,
-            loser:enemy,
+            loser: enemy,
             winnerPkt: game.myPkt,
             loserPkt: game.enemyPkt
         } 
