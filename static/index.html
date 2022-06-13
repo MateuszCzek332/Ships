@@ -5,22 +5,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ships</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body style="padding: 0; margin:0;">
-    <h1>Statki by MC & MP</h1>
-    <h2>Logowanie</h2>
-    <p> Login: <input type="text" id="login"></p>
-    <p> Hasło: <input type="password" id="pass"></p>
-    <button id="logMe" >Zaloguj się</button>
-    <br><br>
-    <a href="register.html"> Zarejestruj się </a>
 
-    <script>    
+    <div class="session">
+        <div class="left"></div>
+        <form action="" class="log-in" autocomplete="off">
+            <h4>Ships</h4>
+            <p>Log in to your account</p>
+            <div class="floating-label">
+                <input placeholder="Login" name="login" id="login" autocomplete="off">
+                <label for="login">Login:</label>
+            </div>
+            <div class="floating-label">
+                <input placeholder="Password" type="password" name="password" id="pass" autocomplete="off">
+                <label for="password">Password:</label>
+            </div>
+            <button type="submit" style="margin: 18px auto auto auto;" onClick="return false;" id="logMe">Log
+                in</button>
+            <button type="submit" style="margin: 8px auto auto auto;" id="register"><a href="register.html"
+                    style="text-decoration: none; color: white;">Registration</a></button>
+            <a href="https://codepen.io/elujambio/pen/yjwzGP" style="display: none;" class="discrete"
+                target="_blank">Basic version</a>
+        </form>
+    </div>
 
-        let login = () =>{ // wysylanie danych na serwer, funkcja checkStatus sprawdza odpowiedz 
+    <script>
+        let login = () => { //Wysyłanie danych na serwer, funkcja checkStatus sprawdza odpowiedź
 
             let data = {
                 userName: document.getElementById("login").value,
@@ -30,18 +44,17 @@
             const options = {
                 method: "POST",
                 body: JSON.stringify(data)
-            };
+            }
 
             fetch("/loginUser", options)
                 .then(response => response.json())
                 .then(mess => checkStatus(mess))
-                .catch(error => console.log(error));
-
+                .catch(error => console.log(error))
         }
 
-        checkStatus = (data) => { //otrzymanie odpowiedzi od serwera o poprawnosci logowania
+        checkStatus = (data) => { //Otrzymanie odpowiedzi od serwera o poprawności logowania
             console.log(data)
-            if(data.status){
+            if (data.status) {
                 console.log("Logowanie udane")
                 window.location.href = "profile.html?user=" + data.userName
             }
@@ -49,12 +62,12 @@
                 console.log("Zły login i/lub hasło")
         }
 
-        document.getElementById("logMe").onclick = () =>{
-            login();
-
+        document.getElementById("logMe").onclick = () => {
+            login()
         }
-    
+
     </script>
 
 </body>
+
 </html>

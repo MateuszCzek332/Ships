@@ -1,7 +1,7 @@
 const express = require("express")
-const Room = require("./app/Room")
+const Room = require("./application/Room")
 const Datastore = require('nedb');
-const Profil = require("./app/Profil");
+const Profil = require("./application/Profil");
 const app = express()
 const PORT = 3000;
 
