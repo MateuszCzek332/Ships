@@ -369,8 +369,7 @@ class Game {
             this.time--;
             if(this.time<0){
                 net.surender()
-                ui.lose();
-                clearInterval(this.timer)
+                this.lose()
             }
 
         },1000)
@@ -378,20 +377,29 @@ class Game {
 
     checkWin = () => {
         if(this.myPkt == 3){
-            this.move = false
-            document.onclick = null
-            net.win()
-            ui.win()
+            this.win()
         }
         else 
             net.checkLastMove()
     }
 
+    win = () => {
+        this.move = false
+        document.onclick = null
+        net.win()
+        ui.win()
+    }
+
+    lose = () => {
+        this.move = false
+        document.onclick = null
+        ui.lose();
+        clearInterval(this.timer)
+    }
+
     checkLose = () => {
         if( this.enemyPkt == 3){
-            this.move = false
-            document.onclick = null
-            ui.lose()
+            this.lose()
         }
     }
     // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu

@@ -82,13 +82,10 @@ class Net {
                 clearInterval(checking)
             }
 
-
         },1000)
     }
 
     surender = async () => {
-
-        ui.lose();
 
         let data = {
             userName: user,

@@ -11,6 +11,8 @@ class Ui {
 
         this.ffButton.onclick = () => {
             net.surender()
+            game.lose()
+            this.lose()
         }
     }
 
