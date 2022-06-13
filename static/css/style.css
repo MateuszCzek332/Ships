@@ -8,6 +8,13 @@ h1{
     left: 40%;
 }
 
+#ffButton{
+    position: absolute;
+    display: none;
+    top: 50px;
+    right: 10%;
+}
+
 #endGame{
     position: absolute;
     display: none;
@@ -18,4 +25,12 @@ h1{
 #endMess{
     font-size: 20px;
     font-weight: bold;
+}
+#move{
+    position: absolute;
+    left: 45%;
+}
+#time{
+    position: absolute;
+    left: 55%;
 }
