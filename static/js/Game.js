@@ -302,8 +302,7 @@ class Game {
 
                 clearInterval(this.timer)
                 this.move = false
-                ui.move.innerText = "ruch przeciwnika"
-                ui.time.innerText = ""
+                ui.enemyMove()
 
                 let m = {
                     userName: user,
@@ -354,13 +353,15 @@ class Game {
             this.move = true
             this.myTimer()
         }
-        else
+        else{
             net.checkLastMove()
+            ui.enemyMove()
+        }
     }
 
     myTimer = () => { 
 
-        ui.move.innerText = "twoj ruch"
+        ui.myMove()
         this.time = 5;
         this.timer = setInterval(async () => {
 
@@ -376,30 +377,24 @@ class Game {
     }
 
     checkWin = () => {
-        if(this.myPkt == 3)
-            this.win()
+        if(this.myPkt == 3){
+            this.move = false
+            document.onclick = null
+            net.win()
+            ui.win()
+        }
         else 
             net.checkLastMove()
     }
 
     checkLose = () => {
-        if( this.enemyPkt == 3)
-            this.lose()
+        if( this.enemyPkt == 3){
+            this.move = false
+            document.onclick = null
+            ui.lose()
+        }
     }
-
-    win = () => {
-        this.move = false
-        document.onclick = null
-        net.win()
-        ui.win()
-    }
-
-    lose = () => {
-        this.move = false
-        document.onclick = null
-        ui.lose()
-    }
-        // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu
+    // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu
     createEnemyBoard = () => {
         this.enemyBoard = new THREE.Object3D();
         for(let i = 0; i < 10; i++)

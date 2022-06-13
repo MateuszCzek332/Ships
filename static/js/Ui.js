@@ -5,8 +5,13 @@ class Ui {
         this.endGameScrean = document.getElementById("endGame")
         this.endGameMess = document.getElementById("endMess")
         this.endGameButton = document.getElementById("endButton")
+        this.ffButton = document.getElementById("ffButton")
         this.move = document.getElementById("move")
         this.time = document.getElementById("time")
+
+        this.ffButton.onclick = () => {
+            net.surender()
+        }
     }
 
     enterQueue = (tab) => {
@@ -18,6 +23,17 @@ class Ui {
         document.onclick = null
         document.onmousemove = null
 
+    }
+
+    enemyMove = () => {
+        this.ffButton.style.display = "none"
+        this.move.innerText = "ruch przeciwnika"
+        this.time.innerText = ""
+    }
+
+    myMove = () => {
+        this.move.innerText = "twoj ruch"
+        this.ffButton.style.display = "block"
     }
 
     start = (mess) => {

@@ -131,7 +131,7 @@ class Net {
 
         const data = {
             winner: user,
-            loser:enemy,
+            loser: enemy,
             winnerPkt: game.myPkt,
             loserPkt: game.enemyPkt
         } 

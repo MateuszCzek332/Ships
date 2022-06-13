@@ -71,7 +71,7 @@ app.post("/game/shoot", function (req, res) {
 
 app.post("/game/lastMove", function (req, res) {
     let data = JSON.parse(req.body)
-    let ans  =gameController.checkLastMohe(data)
+    let ans  =gameController.checkLastMove(data)
     res.send(ans)
 
 })

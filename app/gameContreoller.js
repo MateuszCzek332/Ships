@@ -15,7 +15,7 @@ module.exports = {
             }
         }
     },
-    checkLastMohe: (data) => {
+    checkLastMove: (data) => {
         for(let i = 0; i<dataBases.rooms.length; i++)
             if(dataBases.rooms[i].isHere(data.userName))
                 return dataBases.rooms[i].lastMove
