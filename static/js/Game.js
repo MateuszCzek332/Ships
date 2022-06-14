@@ -132,11 +132,10 @@ class Game {
                                     this.myTab[i][j] = 1
                     }
                 }
+                this.hlShip = null
                 this.unhiglightField()
                 this.shipsToSet.remove(this.selected)
                 this.checkBoard()
-                this.selected = null
-                this.hlShip = null
             }
 
         }
@@ -177,9 +176,14 @@ class Game {
 
     checkBoard = () => {
         if(this.shipsToSet.children.length == 0 ){
-            
+            this.selected = null
+            this.hlShip = null
             this.scene.remove(this.shipsToSet)
             ui.enterQueue(this.myTab)
+        }
+        else{
+            this.selectShip(this.shipsToSet.children[0])
+
         }
     }
 
