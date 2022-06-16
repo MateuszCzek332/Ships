@@ -444,9 +444,9 @@ class Game {
     start = (w) => {
         new TWEEN.Tween(this.camera.position)
             .to({
-                x: 180,
-                y: 1000,
-                z: 900
+                x: 175,
+                y: 800,
+                z: 650
             }, 2000)
             .easing(TWEEN.Easing.Linear.None)
             .start();

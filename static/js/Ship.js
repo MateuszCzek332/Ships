@@ -1,15 +1,17 @@
 class Ship extends THREE.Mesh {
-    a = 40
+    a = 48
     constructor(dl) {
         super() // wywołanie konstruktora Mesha
         this.dlugosc = dl
 
-        if (dl == 4 || dl == 3)
-            this.scale.set(1.65 / 4 * dl, 1.65, 1.65)
+        if (dl == 4)
+            this.scale.set(1.65 / 4 * dl, 2, 1.65)
+        if (dl == 3)
+            this.scale.set(1.65 / 4 * dl, 1.9, 1.2)
         if (dl == 2)
-            this.scale.set(1.65 / 4 * dl, 2.2, 1.2)
+            this.scale.set(1.65 / 4 * dl, 1.8, 1.2)
         if (dl == 1)
-            this.scale.set(1.65 / 4 * dl, 1.5, 0.8)
+            this.scale.set(1.8 / 4 * dl, 1.55, 1)
 
         this.geometry = window.shipmodel.geometry //new THREE.BoxGeometry(this.a * dl, this.a, this.a)
         this.position.x += (this.a * dl) / 2
