@@ -44,7 +44,7 @@ class Ui {
         else
             enemy = mess.player1
         
-        console.log("enemy to: " + enemy)
+        console.log("Enemy to: " + enemy)
     
     }
 
