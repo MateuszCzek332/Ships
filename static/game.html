@@ -5,9 +5,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <title>Ships</title>
+
     <link rel="stylesheet" href="css/style.css">
+
+    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.139.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import { OBJLoader } from 'https://unpkg.com/three@0.139.0/examples/jsm/loaders/OBJLoader.js';
+        window.OBJLoader = OBJLoader
+    </script>
     <script src="/js/three.js"></script>
+    <script src="/libs/tween.umd.js"></script>
     <script src="/js/Ship.js"></script>
     <script src="/js/MyField.js"></script>
     <script src="/js/EnemyField.js"></script>
@@ -19,10 +35,7 @@
 
 <body style="padding: 0; margin:0;">
     <h1 style="position: absolute;">Statki by MC & MP</h1>
-    <div id="move"></div>
-    <div id="time"></div>
     <button id="enterQueue"> Szukaj gry</button>
-    <button id="ffButton"> Poddaj się </button>
     <div id="root" style="overflow:hidden; margin: 0;"></div>
     <div id="endGame">
         <p id="endMess"> win/lose </p>

@@ -1,18 +1,24 @@
-class MyField extends THREE.Mesh {
-
+class MyField {
     a = 50;
-    constructor(x, z) {
-        super() // wywołanie konstruktora Mesha
-        this.geometry = new THREE.BoxGeometry(this.a, this.a, this.a)
-        this.material =  new THREE.MeshBasicMaterial({
-                    side: THREE.DoubleSide,
-                    color: 0x00ffff, 
-                    transparent: true, 
-        })
-        this.position.set(x*this.a, 0, z*this.a)
-        this.x = x
-        this.z = z
 
+    constructor() {
+        this.init()
     }
 
+    init() {
+        const geometry = new THREE.BoxGeometry(this.a, 10, this.a);
+        const material = new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load("../img/water.jpg"),
+            color: 0xffffff,
+            transparent: true,
+        })
+
+        this.cube = new THREE.Mesh(geometry, material);
+        this.cube.name = "myField"
+    }
+
+    getCube() {
+        return this.cube;
+    }
 }
