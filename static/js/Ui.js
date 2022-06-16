@@ -5,6 +5,15 @@ class Ui {
         this.endGameScrean = document.getElementById("endGame")
         this.endGameMess = document.getElementById("endMess")
         this.endGameButton = document.getElementById("endButton")
+        this.ffButton = document.getElementById("ffButton")
+        this.move = document.getElementById("move")
+        this.time = document.getElementById("time")
+
+        this.ffButton.onclick = () => {
+            net.surender()
+            game.lose()
+            this.lose()
+        }
     }
 
     enterQueue = (tab) => {

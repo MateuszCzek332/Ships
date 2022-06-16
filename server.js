@@ -12,14 +12,15 @@ app.post("/addUser", function (req, res) {
 
     let data = JSON.parse(req.body)
 
-    dataBases.users.find({ userName: data.userName }, function (err, docs) {
-        if (docs.length > 0) // spprawdzenie czy istnieje taki urzytkownik jezeli nie dodanie go do bazy 
-            res.send({ status: false })
-        else {
+    dataBases.users.find({ userName: data.userName}, function (err, docs) {
+        if(docs.length > 0 ) // spprawdzenie czy istnieje taki urzytkownik jezeli nie dodanie go do bazy 
+            res.send({status: false})
+        else{
             dataBases.users.insert(data, function (err, newDoc) {
                 //console.log(newDoc)
             });
-            dataBases.profiles.insert(new Profil(data.userName), function (err, newDoc) {
+            dataBases.profiles.insert(new Profil(data.userName) , function (err, newDoc) {
+
                 //console.log(newDoc)
             });
             res.send({ status: true })
@@ -31,8 +32,9 @@ app.post("/addUser", function (req, res) {
 app.post("/loginUser", function (req, res) {
 
     let data = JSON.parse(req.body)
-    dataBases.users.find({ userName: data.userName, pass: data.pass }, function (err, docs) {
-        if (docs.length > 0) // spprawdzenie czy w bazie istnieje user z takim loginem i haslem
+
+    dataBases.users.find({ userName: data.userName, pass: data.pass}, function (err, docs) {
+        if(docs.length > 0 ) // spprawdzenie czy w bazie istnieje user z takim loginem i haslem
             data.status = true
         else
             data.status = false
