@@ -203,7 +203,7 @@ class Game {
             this.selectShip(this.shipsToSet.children[0])
 
     }
-
+ 
     selectShip = (ship) => {
         if (this.selected != null)
             this.unselectShip()
@@ -340,7 +340,7 @@ class Game {
         if(this.checkShip(field.x, field.z))
             color = 0x00ff00
         else
-            color =  0xff0000
+            color = 0xff0000
 
         switch(true){
             case this.orientation && field.x <= 10 - this.selected.dlugosc:
@@ -388,48 +388,55 @@ class Game {
     }
 
     shoot = async (event) => {
-        if (this.move) {
+        if(this.move){
             this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
             this.raycaster.setFromCamera(this.mouseVector, this.camera);
-
             const intersects = this.raycaster.intersectObjects(this.enemyBoard.children);
 
-            if (intersects.length > 0 && intersects[0].object.canShoot) {
+            if(intersects.length>0 && intersects[0].object.canShoot){
+
+                clearInterval(this.timer)
+                this.move = false
+                ui.enemyMove()
 
                 let m = {
                     userName: user,
+                    surender: false,
                     x: intersects[0].object.x,
                     z: intersects[0].object.z
                 }
 
                 let w = await net.shootFetchPostAsync(m)
-                this.move = false
 
-                if (w.shooted) {
-                    intersects[0].object.material.color = { r: 255, g: 0, b: 0 }
+                if(w.shooted){
+                    intersects[0].object.material.color = {r:255, g:0, b:0}
                     this.myPkt++
                     this.checkWin()
-                } else
-                    intersects[0].object.material.color = { r: 0, g: 255, b: 0 }
+                }else{
+                    intersects[0].object.material.color = {r:0, g:255, b:0}
+                    net.checkLastMove()
+                }
                 intersects[0].object.canShoot = false
 
-                net.checkLastMove()
             }
         }
     }
 
     enemyMove = (w) => {
 
-        if (this.myTab[w.x][w.z] == 2) {
-            this.myFields[w.x][w.z].material.color = { r: 255, g: 0, b: 0 }
-            this.enemyPkt++
-            this.checkWin()
-        }
-        else
-            this.myFields[w.x][w.z].material.color = { r: 0, g: 255, b: 0 }
+        if(w.surender)
+            this.win()
 
+        if(this.myTab[w.x][w.z] == 2){
+            this.myFields[w.x][w.z].material.color = {r:255, g:0, b:0}
+            this.enemyPkt++
+            this.checkLose()
+        }    
+        else
+            this.myFields[w.x][w.z].material.color = {r:0, g:255, b:0}
+        
+        this.myTimer()
         this.move = true
     }
 
@@ -447,10 +454,14 @@ class Game {
         document.onclick = (e) => {
             this.shoot(e)
         }
-        if (w.userName != user)
+        if(w.userName != user){
             this.move = true
-        else
+            this.myTimer()
+        }
+        else{
             net.checkLastMove()
+            ui.enemyMove()
+        }
     }
 
     myTimer = () => { 
@@ -490,10 +501,21 @@ class Game {
     lose = () => {
         this.move = false
         document.onclick = null
+        ui.lose();
         clearInterval(this.timer)
-        ui.lose()
     }
-
+    // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu
+    createEnemyBoard = () => {
+        this.enemyBoard = new THREE.Object3D();
+        for(let i = 0; i < 10; i++)
+            for(let j = 0; j<10; j++)
+                this.enemyBoard.add(new EnemyField(i, j))
+        
+        this.enemyBoard.position.x = 270
+        this.enemyBoard.position.z = -200
+        this.scene.add(this.enemyBoard)
+    }
+    //tworzenie planszy gracza do stawiania statków oraz tablicy trzymającej informacje o położeniu statków
     createMyBoard = () => {
         this.myBoard = new THREE.Object3D();
         this.myFields = [];
@@ -511,17 +533,6 @@ class Game {
         this.myBoard.position.x = -400
         this.myBoard.position.z = -200
         this.scene.add(this.myBoard)
-    }
-
-    createEnemyBoard = () => {
-        this.enemyBoard = new THREE.Object3D();
-        for(let i = 0; i < 10; i++)
-            for(let j = 0; j<10; j++)
-                this.enemyBoard.add(new EnemyField(i, j))
-        
-        this.enemyBoard.position.x = 270
-        this.enemyBoard.position.z = -200
-        this.scene.add(this.enemyBoard)
     }
     
     createShipsToSet = () => {

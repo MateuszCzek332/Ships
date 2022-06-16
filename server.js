@@ -5,7 +5,7 @@ const dataBases = require("./app/dataBases.js")
 const Profil = require("./app/Profil")
 const express = require("express")
 const app = express()
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.text())
 app.post("/addUser", function (req, res) {

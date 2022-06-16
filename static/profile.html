@@ -5,21 +5,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <title>Ships</title>
+    <link rel="stylesheet" href="css/style2.css">
 </head>
 
 <body style="padding: 0; margin:0;">
-    <h1>Statki by MC & MP</h1>
-    <h2 id="userName">Witaj </h2>
-    <div id="bilans">wygrane <span id="wins"></span>  -  <span id="loses"></span> przegrane</div><br>
-    <p>Historia gier</p>
-    <table id="matchHistory">
-    </table>
-    <button id="play">GRAJ</button>
+    <div class="session">
+        <div class="log-in" autocomplete="off">
+            <h2>Hello <span id="userName" style="color: blue"></span></h2>
+            <div id="bilans">Wins: <span id="wins"></span> - <span id="loses"></span> :Losses</div><br>
+            <button id="play" style="margin: 120px auto 6px auto;">Play</button>
+            <button id="stat" style="margin: 6px auto; ">Statistics</button>
+            <button style="margin: 6px auto auto auto;" id="logout"><a href="index.html"
+                    style="text-decoration: none; color: white;">Log out</a></button>
+        </div>
+        <table style="margin: auto;" id="matchHistory">
+        </table>
+    </div>
+
     <script>
         let user;
-        window.onload = () =>{
+        window.onload = () => {
             let params = new URLSearchParams(location.search)
             user = params.get("user")
             document.getElementById("userName").innerText += " " + user;
@@ -29,11 +35,11 @@
             window.location.href = "game.html?user=" + user
         }
 
-        let init = () =>{ 
+        let init = () => {
 
             const options = {
                 method: "POST",
-                body: JSON.stringify({profile: user})
+                body: JSON.stringify({ profile: user })
             };
 
             fetch("/user/profile", options)
@@ -43,32 +49,65 @@
 
         }
 
-        genProfile = (data)=> {
+        genProfile = (data) => {
             document.getElementById("wins").innerText = data.wins
             document.getElementById("loses").innerText = data.loses
             let table = document.getElementById("matchHistory")
+
+            let flag = true
+
+            document.getElementById("stat").addEventListener("click", () => {
+                if (flag)
+                    table.style.transform = "translate(170px, -50%)"
+                else
+                    table.style.transform = "translate(-50%, -50%)"
+                flag = !flag
+            })
+
+            console.log(data)
+
+            let tr1 = document.createElement("tr")
+            let winner1 = document.createElement("td")
+            let winnerPkt1 = document.createElement("td")
+            let loserPkt1 = document.createElement("td")
+            let loser1 = document.createElement("td")
+
+            winner1.innerText = "Winner:"
+            winnerPkt1.innerText = "Winner points:"
+            loserPkt1.innerText = "Loser points:"
+            loser1.innerText = "Loser:"
+
+            tr1.appendChild(winner1)
+            tr1.appendChild(winnerPkt1)
+            tr1.appendChild(loserPkt1)
+            tr1.appendChild(loser1)
+
+            table.appendChild(tr1)
+
             data.history.forEach(el => {
                 let tr = document.createElement("tr")
-                    let winner =  document.createElement("td")
-                    let winnerPkt = document.createElement("td")
-                    let loserPkt = document.createElement("td")
-                    let loser = document.createElement("td")
-                    winner.innerText = el.winner
-                    winnerPkt.innerText = el.winnerPkt
-                    loserPkt.innerText = el.loserPkt
-                    loser.innerText = el.loser
-                    tr.appendChild(winner)
-                    tr.appendChild(winnerPkt)
-                    tr.appendChild(loserPkt)
-                    tr.appendChild(loser)
-                if(el.winner == user)
-                    tr.style.backgroundColor = "green"
+                let winner = document.createElement("td")
+                let winnerPkt = document.createElement("td")
+                let loserPkt = document.createElement("td")
+                let loser = document.createElement("td")
+                winner.innerText = el.winner
+                winnerPkt.innerText = el.winnerPkt
+                loserPkt.innerText = el.loserPkt
+                loser.innerText = el.loser
+                tr.appendChild(winner)
+                tr.appendChild(winnerPkt)
+                tr.appendChild(loserPkt)
+                tr.appendChild(loser)
+                if (el.winner == user)
+                    tr.style.backgroundColor = "rgb(91, 180, 91)"
                 else
-                    tr.style.backgroundColor = "red"
+                    tr.style.backgroundColor = "rgb(185, 44, 44)"
                 table.appendChild(tr)
+                table.style.height += (50 + "px")
             });
         }
 
     </script>
 </body>
+
 </html>
