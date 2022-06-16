@@ -12,7 +12,6 @@ class MyField extends THREE.Mesh {
         this.position.set(x*this.a, 0, z*this.a)
         this.x = x
         this.z = z
-
     }
 
 }
