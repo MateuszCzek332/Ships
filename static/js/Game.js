@@ -338,32 +338,32 @@ class Game {
 
         let color
         if(this.checkShip(field.x, field.z))
-            color = {r:0, g:255, b:0}
+            color = 0x00ff00
         else
-            color = {r:255, g:0, b:0}
+            color =  0xff0000
 
         switch(true){
             case this.orientation && field.x <= 10 - this.selected.dlugosc:
                 for(let i = field.x; i < field.x + this.selected.dlugosc; i++ ){
-                    this.myFields[i][field.z].material.color = color
+                    this.myFields[i][field.z].material.color.set(color)
                     this.hlFields.push(this.myFields[i][field.z])
                 }
                 break
             case this.orientation && field.x > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
                 for(let i = 9; i >= 10 - this.selected.dlugosc; i--){
-                    this.myFields[i][field.z].material.color = color
+                    this.myFields[i][field.z].material.color.set(color)
                     this.hlFields.push(this.myFields[i][field.z])
                 }
                 break
             case !this.orientation && field.z <= 10 - this.selected.dlugosc:
                 for(let i = field.z; i < field.z + this.selected.dlugosc; i++ ){
-                    this.myFields[field.x][i].material.color = color
+                    this.myFields[field.x][i].material.color.set(color)
                     this.hlFields.push(this.myFields[field.x][i])
                 }
                 break
             case !this.orientation && field.z > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
                 for(let i = 9; i >= 10 - this.selected.dlugosc; i--){
-                    this.myFields[field.x][i].material.color = color
+                    this.myFields[field.x][i].material.color.set(color)
                     this.hlFields.push(this.myFields[field.x][i])
                 }
                 break
@@ -372,12 +372,11 @@ class Game {
         this.hlField = field
         //console.log(Date.now() - this.test_time)
     }
-  }
-    
+
     unhiglightField = () => {
         if(this.hlFields.length > 0)
             for(let i = 0; i < this.hlFields.length; i++)
-                this.hlFields[i].material.color.set(0xffffff)}
+                this.hlFields[i].material.color.set(0xffffff)
         
         this.hlField = null;
         this.hlFields.length = 0;
@@ -499,15 +498,14 @@ class Game {
         this.myBoard = new THREE.Object3D();
         this.myFields = [];
         this.myTab = []
-        for (let i = 0; i < 10; i++) {
+        for(let i = 0; i < 10; i++){
             this.myFields[i] = []
             this.myTab[i] = []
-            for (let j = 0; j < 10; j++) {
+            for(let j = 0; j<10; j++){
                 this.myTab[i][j] = 0
-                let field = new MyField()
-                field.getCube().position.set(i * field.a, 0, j * field.a)
-                this.myFields[i][j] = field.getCube()
-                this.myBoard.add(this.myFields[i][j])
+                let field =  new MyField(i, j)
+                this.myFields[i][j] = field
+                this.myBoard.add(field)
             }
         }
         this.myBoard.position.x = -400

@@ -7,7 +7,7 @@ class MyField extends THREE.Mesh {
         this.material =  new THREE.MeshBasicMaterial({
                     map: new THREE.TextureLoader().load("../img/water.jpg"),
                     side: THREE.DoubleSide,
-                    color: 0x00ffff, 
+                    color: 0xffffff, 
                     transparent: true, 
         })
         this.position.set(x*this.a, 0, z*this.a)
