@@ -472,7 +472,7 @@ class Game {
     myTimer = () => {
 
         ui.myMove()
-        this.time = 5;
+        this.time = 30;
         this.timer = setInterval(async () => {
             ui.time.innerText = this.time
             this.time--;
@@ -485,14 +485,14 @@ class Game {
     }
 
     checkWin = () => {
-        if (this.myPkt == 3)
+        if (this.myPkt == 20)
             this.win()
         else
             net.checkLastMove()
     }
 
     checkLose = () => {
-        if (this.enemyPkt == 3)
+        if (this.enemyPkt == 20)
             this.lose()
     }
 
