@@ -204,7 +204,7 @@ class Game {
             this.selectShip(this.shipsToSet.children[0])
 
     }
-
+ 
     selectShip = (ship) => {
         if (this.selected != null)
             this.unselectShip()
@@ -389,13 +389,17 @@ class Game {
     }
 
     shoot = async (event) => {
-        if (this.move) {
+        if(this.move){
             this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
             this.raycaster.setFromCamera(this.mouseVector, this.camera);
             const intersects = this.raycaster.intersectObjects(this.enemyBoard.children);
 
-            if (intersects.length > 0 && intersects[0].object.canShoot) {
+            if(intersects.length>0 && intersects[0].object.canShoot){
+
+                clearInterval(this.timer)
+                this.move = false
+                ui.enemyMove()
 
                 clearInterval(this.timer)
                 this.move = false
@@ -425,7 +429,6 @@ class Game {
     }
 
     enemyMove = (w) => {
-
         if (w.surender)
             this.win()
 
@@ -455,11 +458,12 @@ class Game {
         document.onclick = (e) => {
             this.shoot(e)
         }
-        if (w.userName != user) {
+
+        if(w.userName != user){
             this.move = true
             this.myTimer()
         }
-        else {
+        else{
             net.checkLastMove()
             ui.enemyMove()
         }
@@ -508,10 +512,10 @@ class Game {
     // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu
     createEnemyBoard = () => {
         this.enemyBoard = new THREE.Object3D();
-        for (let i = 0; i < 10; i++)
-            for (let j = 0; j < 10; j++)
+        for(let i = 0; i < 10; i++)
+            for(let j = 0; j<10; j++)
                 this.enemyBoard.add(new EnemyField(i, j))
-
+        
         this.enemyBoard.position.x = 270
         this.enemyBoard.position.z = -200
         this.scene.add(this.enemyBoard)
@@ -535,7 +539,7 @@ class Game {
         this.myBoard.position.z = -200
         this.scene.add(this.myBoard)
     }
-
+  
     createShipsToSet = () => {
         this.shipsToSet = new THREE.Object3D();
         this.shipsToSet.position.x = -700
