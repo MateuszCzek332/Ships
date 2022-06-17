@@ -12,7 +12,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  background: white;
+  background: blue;
 }
 
 /* body {
