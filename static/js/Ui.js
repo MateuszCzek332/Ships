@@ -29,12 +29,13 @@ class Ui {
 
     enemyMove = () => {
         this.ffButton.style.display = "none"
-        this.move.innerText = "ruch przeciwnika"
+        this.move.innerText = "Opponent's movement"
         this.time.innerText = ""
     }
 
     myMove = () => {
-        this.move.innerText = "twoj ruch"
+        this.move.innerText = "Your turn"
+
         this.ffButton.style.display = "block"
     }
 
@@ -43,13 +44,14 @@ class Ui {
             enemy = mess.player2
         else
             enemy = mess.player1
-        
-        console.log("enemy to: " + enemy)
-    
+        console.log("Enemy to: " + enemy)
+
     }
 
     win = () => {
-        this.endGameMess.innerText = "WYGRAŁEŚ"
+        this.endGameMess.style.margin = "-5px auto -15px calc(50% - 58px)"
+        this.endGameMess.innerText = "Winner"
+
         this.endGameScrean.style.display = "block"
         this.move.style.display = "none"
         this.time.style.display = "none"
@@ -59,7 +61,8 @@ class Ui {
     }
 
     lose = () => {
-        this.endGameMess.innerText = "PRZEGRAŁEŚ"    
+        this.endGameMess.style.margin = "-5px auto -15px calc(50% - 45px)"
+        this.endGameMess.innerText = "Loser"
         this.endGameScrean.style.display = "block"
         this.move.style.display = "none"
         this.time.style.display = "none"

@@ -10,9 +10,9 @@ class Game {
 
         this.renderer.setClearColor(0xffffff);
         this.renderer.setSize(window.innerWidth, window.innerHeight)
-        this.camera.position.set(0, 800, 700)
+        this.camera.position.set(0, 750, 580)
         this.camera.lookAt(this.scene.position)
-        this.camera.position.set(-170, 800, 700)
+        this.camera.position.set(-175, 750, 580)
 
         document.getElementById("root").append(this.renderer.domElement);
         this.render()
@@ -47,6 +47,7 @@ class Game {
                 }
             );
         })
+
         this.createShipsToSet()
         this.createMyBoard()
 
@@ -91,7 +92,7 @@ class Game {
                     this.unhiglightField()
                 }
 
-                else if(this.hlField == null || intersects[0].object.position.x != this.hlField.position.x || intersects[0].object.position.z != this.hlField.position.z )
+                else if (this.hlField == null || intersects[0].object.position.x != this.hlField.position.x || intersects[0].object.position.z != this.hlField.position.z)
                     this.higlight(intersects[0].object)
 
             }
@@ -111,49 +112,49 @@ class Game {
 
     clickToPlaceShip = () => {
         const intersects = this.raycaster.intersectObjects(this.myBoard.children);
-        if(intersects.length>0){
-            let x =  intersects[0].object.x
-            let z =  intersects[0].object.z
-            if(this.checkShip(x, z)){
-                switch(true){
+        if (intersects.length > 0) {
+            let x = intersects[0].object.x
+            let z = intersects[0].object.z
+            if (this.checkShip(x, z)) {
+                switch (true) {
                     case this.orientation && x < 10 - this.selected.dlugosc:
-                        for(let i = x - 1; i <= x + this.selected.dlugosc; i++ )
-                            for(let j = z-1; j<= z+1; j++)
-                                if(i>=0 && j>=0 && j<10){
-                                    if( i>=x && i < x+this.selected.dlugosc && j==z)
+                        for (let i = x - 1; i <= x + this.selected.dlugosc; i++)
+                            for (let j = z - 1; j <= z + 1; j++)
+                                if (i >= 0 && j >= 0 && j < 10) {
+                                    if (i >= x && i < x + this.selected.dlugosc && j == z)
                                         this.myTab[i][j] = 2
-                                    else    
-                                        this.myTab[i][j] = 1    
+                                    else
+                                        this.myTab[i][j] = 1
                                 }
                         break
                     case this.orientation && x >= 10 - this.selected.dlugosc:
-                        for(let i = 9; i >= 9 - this.selected.dlugosc; i--)
-                            for(let j = z-1; j<= z+1; j++)
-                                if(j>=0 && j<10){
-                                    if( i > 9 - this.selected.dlugosc && j==z)
+                        for (let i = 9; i >= 9 - this.selected.dlugosc; i--)
+                            for (let j = z - 1; j <= z + 1; j++)
+                                if (j >= 0 && j < 10) {
+                                    if (i > 9 - this.selected.dlugosc && j == z)
                                         this.myTab[i][j] = 2
-                                    else    
-                                        this.myTab[i][j] = 1    
+                                    else
+                                        this.myTab[i][j] = 1
                                 }
                         break
                     case !this.orientation && z <= 10 - this.selected.dlugosc:
-                        for(let i = x - 1; i <= x+1; i++ )
-                            for(let j = z - 1; j <= z + this.selected.dlugosc; j++ )
-                                if(i>=0 && j>=0 && i<10){
-                                    if( j>=z && j < z+this.selected.dlugosc && i==x)
+                        for (let i = x - 1; i <= x + 1; i++)
+                            for (let j = z - 1; j <= z + this.selected.dlugosc; j++)
+                                if (i >= 0 && j >= 0 && i < 10) {
+                                    if (j >= z && j < z + this.selected.dlugosc && i == x)
                                         this.myTab[i][j] = 2
-                                    else    
-                                        this.myTab[i][j] = 1    
+                                    else
+                                        this.myTab[i][j] = 1
                                 }
                         break
                     case !this.orientation && z > 10 - this.selected.dlugosc:
-                        for(let i = x - 1; i <= x+1; i++ )
-                            for(let j = 9; j >= 9 - this.selected.dlugosc; j-- )
-                                if(i>=0 && i<10){
-                                    if( j > 9 - this.selected.dlugosc && i==x)
+                        for (let i = x - 1; i <= x + 1; i++)
+                            for (let j = 9; j >= 9 - this.selected.dlugosc; j--)
+                                if (i >= 0 && i < 10) {
+                                    if (j > 9 - this.selected.dlugosc && i == x)
                                         this.myTab[i][j] = 2
-                                    else    
-                                        this.myTab[i][j] = 1    
+                                    else
+                                        this.myTab[i][j] = 1
                                 }
                         break
                 }
@@ -166,25 +167,25 @@ class Game {
     }
 
     checkShip = (x, z) => {
-        switch(true){
+        switch (true) {
             case this.orientation && x <= 10 - this.selected.dlugosc:
-                for(let i = x; i < x + this.selected.dlugosc; i++ )
-                    if( this.myTab[i][z] == 1 || this.myTab[i][z] == 2 )
-                        return false 
+                for (let i = x; i < x + this.selected.dlugosc; i++)
+                    if (this.myTab[i][z] == 1 || this.myTab[i][z] == 2)
+                        return false
                 break
             case this.orientation && x > 10 - this.selected.dlugosc:
-                for(let i = 9; i >= 10 - this.selected.dlugosc; i--)
-                    if( this.myTab[i][z] == 1 || this.myTab[i][z] == 2 )
+                for (let i = 9; i >= 10 - this.selected.dlugosc; i--)
+                    if (this.myTab[i][z] == 1 || this.myTab[i][z] == 2)
                         return false
                 break
             case !this.orientation && z <= 10 - this.selected.dlugosc:
-                for(let i = z; i < z + this.selected.dlugosc; i++ )
-                    if( this.myTab[x][i] == 1 || this.myTab[x][i] == 2 )
+                for (let i = z; i < z + this.selected.dlugosc; i++)
+                    if (this.myTab[x][i] == 1 || this.myTab[x][i] == 2)
                         return false
                 break
             case !this.orientation && z > 10 - this.selected.dlugosc:
-                for(let i = 9; i >= 10 - this.selected.dlugosc; i--)
-                    if( this.myTab[x][i] == 1 || this.myTab[x][i] == 2 )
+                for (let i = 9; i >= 10 - this.selected.dlugosc; i--)
+                    if (this.myTab[x][i] == 1 || this.myTab[x][i] == 2)
                         return false
                 break
         }
@@ -193,7 +194,7 @@ class Game {
 
     checkBoard = () => {
 
-        if(this.shipsToSet.children.length == 0 ){
+        if (this.shipsToSet.children.length == 0) {
             this.selected = null
             this.hlShip = null
             this.scene.remove(this.shipsToSet)
@@ -208,17 +209,17 @@ class Game {
         if (this.selected != null)
             this.unselectShip()
 
-        ship.material.color = { r: 255, g: 0, b: 0 }
+        ship.material.color.set(0xff0000)
         this.selected = ship
     }
 
     unselectShip = () => {
-        this.selected.material.color = { r: 0, g: 0, b: 255 }
+        this.selected.material.color.set(0x0000ff)
         this.selected = null
     }
 
     higlight = (field) => {
-        if(this.hlShip == null)
+        if (this.hlShip == null)
             this.respownShip(field)
         else
             this.moveShip(field)
@@ -226,32 +227,32 @@ class Game {
         this.unhiglightField()
 
         let color
-        if(this.checkShip(field.x, field.z))
+        if (this.checkShip(field.x, field.z))
             color = 0x00ff00
         else
             color = 0xff0000
 
-        switch(true){
+        switch (true) {
             case this.orientation && field.x <= 10 - this.selected.dlugosc:
-                for(let i = field.x; i < field.x + this.selected.dlugosc; i++ ){
+                for (let i = field.x; i < field.x + this.selected.dlugosc; i++) {
                     this.myFields[i][field.z].material.color.set(color)
                     this.hlFields.push(this.myFields[i][field.z])
                 }
                 break
             case this.orientation && field.x > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
-                for(let i = 9; i >= 10 - this.selected.dlugosc; i--){
+                for (let i = 9; i >= 10 - this.selected.dlugosc; i--) {
                     this.myFields[i][field.z].material.color.set(color)
                     this.hlFields.push(this.myFields[i][field.z])
                 }
                 break
             case !this.orientation && field.z <= 10 - this.selected.dlugosc:
-                for(let i = field.z; i < field.z + this.selected.dlugosc; i++ ){
+                for (let i = field.z; i < field.z + this.selected.dlugosc; i++) {
                     this.myFields[field.x][i].material.color.set(color)
                     this.hlFields.push(this.myFields[field.x][i])
                 }
                 break
             case !this.orientation && field.z > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
-                for(let i = 9; i >= 10 - this.selected.dlugosc; i--){
+                for (let i = 9; i >= 10 - this.selected.dlugosc; i--) {
                     this.myFields[field.x][i].material.color.set(color)
                     this.hlFields.push(this.myFields[field.x][i])
                 }
@@ -261,7 +262,7 @@ class Game {
         this.hlField = field
         //console.log(Date.now() - this.test_time)
     }
-  
+
     respownShip = (field) => {
         let ship = new Ship(this.selected.dlugosc)
         ship.position.y = 50
@@ -329,7 +330,7 @@ class Game {
     }
 
     higlight = (field) => {
-        if(this.hlShip == null)
+        if (this.hlShip == null)
             this.respownShip(field)
         else
             this.moveShip(field)
@@ -337,32 +338,32 @@ class Game {
         this.unhiglightField()
 
         let color
-        if(this.checkShip(field.x, field.z))
+        if (this.checkShip(field.x, field.z))
             color = 0x00ff00
         else
             color = 0xff0000
 
-        switch(true){
+        switch (true) {
             case this.orientation && field.x <= 10 - this.selected.dlugosc:
-                for(let i = field.x; i < field.x + this.selected.dlugosc; i++ ){
+                for (let i = field.x; i < field.x + this.selected.dlugosc; i++) {
                     this.myFields[i][field.z].material.color.set(color)
                     this.hlFields.push(this.myFields[i][field.z])
                 }
                 break
             case this.orientation && field.x > 10 - this.selected.dlugosc && field.position.z != this.hlShip.position.z:
-                for(let i = 9; i >= 10 - this.selected.dlugosc; i--){
+                for (let i = 9; i >= 10 - this.selected.dlugosc; i--) {
                     this.myFields[i][field.z].material.color.set(color)
                     this.hlFields.push(this.myFields[i][field.z])
                 }
                 break
             case !this.orientation && field.z <= 10 - this.selected.dlugosc:
-                for(let i = field.z; i < field.z + this.selected.dlugosc; i++ ){
+                for (let i = field.z; i < field.z + this.selected.dlugosc; i++) {
                     this.myFields[field.x][i].material.color.set(color)
                     this.hlFields.push(this.myFields[field.x][i])
                 }
                 break
             case !this.orientation && field.z > 10 - this.selected.dlugosc && field.position.x != this.hlShip.position.x:
-                for(let i = 9; i >= 10 - this.selected.dlugosc; i--){
+                for (let i = 9; i >= 10 - this.selected.dlugosc; i--) {
                     this.myFields[field.x][i].material.color.set(color)
                     this.hlFields.push(this.myFields[field.x][i])
                 }
@@ -374,10 +375,10 @@ class Game {
     }
 
     unhiglightField = () => {
-        if(this.hlFields.length > 0)
-            for(let i = 0; i < this.hlFields.length; i++)
+        if (this.hlFields.length > 0)
+            for (let i = 0; i < this.hlFields.length; i++)
                 this.hlFields[i].material.color.set(0xffffff)
-        
+
         this.hlField = null;
         this.hlFields.length = 0;
     }
@@ -400,6 +401,10 @@ class Game {
                 this.move = false
                 ui.enemyMove()
 
+                clearInterval(this.timer)
+                this.move = false
+                ui.enemyMove()
+
                 let m = {
                     userName: user,
                     surender: false,
@@ -409,12 +414,12 @@ class Game {
 
                 let w = await net.shootFetchPostAsync(m)
 
-                if(w.shooted){
-                    intersects[0].object.material.color = {r:255, g:0, b:0}
+                if (w.shooted) {
+                    intersects[0].object.material.color.set(0xff0000)
                     this.myPkt++
                     this.checkWin()
-                }else{
-                    intersects[0].object.material.color = {r:0, g:255, b:0}
+                } else {
+                    intersects[0].object.material.color.set(0x00ff00)
                     net.checkLastMove()
                 }
                 intersects[0].object.canShoot = false
@@ -424,18 +429,17 @@ class Game {
     }
 
     enemyMove = (w) => {
-
-        if(w.surender)
+        if (w.surender)
             this.win()
 
-        if(this.myTab[w.x][w.z] == 2){
-            this.myFields[w.x][w.z].material.color = {r:255, g:0, b:0}
+        if (this.myTab[w.x][w.z] == 2) {
+            this.myFields[w.x][w.z].material.color.set(0xff0000)
             this.enemyPkt++
             this.checkLose()
-        }    
+        }
         else
-            this.myFields[w.x][w.z].material.color = {r:0, g:255, b:0}
-        
+            this.myFields[w.x][w.z].material.color.set(0x00ff00)
+
         this.myTimer()
         this.move = true
     }
@@ -443,9 +447,9 @@ class Game {
     start = (w) => {
         new TWEEN.Tween(this.camera.position)
             .to({
-                x: 180,
-                y: 1000,
-                z: 900
+                x: 175,
+                y: 800,
+                z: 650
             }, 2000)
             .easing(TWEEN.Easing.Linear.None)
             .start();
@@ -454,6 +458,7 @@ class Game {
         document.onclick = (e) => {
             this.shoot(e)
         }
+
         if(w.userName != user){
             this.move = true
             this.myTimer()
@@ -464,30 +469,30 @@ class Game {
         }
     }
 
-    myTimer = () => { 
+    myTimer = () => {
 
         ui.myMove()
         this.time = 5;
         this.timer = setInterval(async () => {
             ui.time.innerText = this.time
             this.time--;
-            if(this.time<0){
+            if (this.time < 0) {
                 net.surender()
                 this.lose()
             }
 
-        },1000)
+        }, 1000)
     }
 
     checkWin = () => {
-        if(this.myPkt == 3)
+        if (this.myPkt == 3)
             this.win()
-        else 
+        else
             net.checkLastMove()
     }
 
     checkLose = () => {
-        if( this.enemyPkt == 3)
+        if (this.enemyPkt == 3)
             this.lose()
     }
 
@@ -520,12 +525,12 @@ class Game {
         this.myBoard = new THREE.Object3D();
         this.myFields = [];
         this.myTab = []
-        for(let i = 0; i < 10; i++){
+        for (let i = 0; i < 10; i++) {
             this.myFields[i] = []
             this.myTab[i] = []
-            for(let j = 0; j<10; j++){
+            for (let j = 0; j < 10; j++) {
                 this.myTab[i][j] = 0
-                let field =  new MyField(i, j)
+                let field = new MyField(i, j)
                 this.myFields[i][j] = field
                 this.myBoard.add(field)
             }
@@ -534,7 +539,7 @@ class Game {
         this.myBoard.position.z = -200
         this.scene.add(this.myBoard)
     }
-    
+  
     createShipsToSet = () => {
         this.shipsToSet = new THREE.Object3D();
         this.shipsToSet.position.x = -700
