@@ -12,7 +12,7 @@ class EnemyField extends THREE.Mesh {
         this.material = new THREE.MeshBasicMaterial({
             side: THREE.DoubleSide,
             map: new THREE.TextureLoader().load("../img/water.jpg"),
-            color: 0xffff00,
+            color: 0x8C8A93,
             transparent: true,
         })
     }

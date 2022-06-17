@@ -17,7 +17,7 @@ class Ship extends THREE.Mesh {
         this.position.x += (this.a * dl) / 2
         this.material = new THREE.MeshBasicMaterial({
             side: THREE.DoubleSide,
-            color: 0x0000ff,
+            color: 0x3D3D3B,
             transparent: true,
         })
     }
