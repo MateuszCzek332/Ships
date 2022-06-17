@@ -10,9 +10,9 @@ class Game {
 
         this.renderer.setClearColor(0xffffff);
         this.renderer.setSize(window.innerWidth, window.innerHeight)
-        this.camera.position.set(0, 750, 580)
+        this.camera.position.set(0, 800, 620)
         this.camera.lookAt(this.scene.position)
-        this.camera.position.set(-175, 750, 580)
+        this.camera.position.set(-175, 800, 620)
 
         document.getElementById("root").append(this.renderer.domElement);
         this.render()
@@ -204,7 +204,7 @@ class Game {
             this.selectShip(this.shipsToSet.children[0])
 
     }
- 
+
     selectShip = (ship) => {
         if (this.selected != null)
             this.unselectShip()
@@ -214,7 +214,7 @@ class Game {
     }
 
     unselectShip = () => {
-        this.selected.material.color.set(0x0000ff)
+        this.selected.material.color.set(0x243032)
         this.selected = null
     }
 
@@ -228,9 +228,9 @@ class Game {
 
         let color
         if (this.checkShip(field.x, field.z))
-            color = 0x00ff00
+            color = 0x1fc600
         else
-            color = 0xff0000
+            color = 0xdc143c
 
         switch (true) {
             case this.orientation && field.x <= 10 - this.selected.dlugosc:
@@ -265,7 +265,7 @@ class Game {
 
     respownShip = (field) => {
         let ship = new Ship(this.selected.dlugosc)
-        ship.position.y = 50
+        ship.position.y = 10
         if (this.orientation) {
             if (field.position.x / 50 > 10 - this.selected.dlugosc) {
                 let x = 10 - this.selected.dlugosc
@@ -339,9 +339,9 @@ class Game {
 
         let color
         if (this.checkShip(field.x, field.z))
-            color = 0x00ff00
+            color = 0x1fc600
         else
-            color = 0xff0000
+            color = 0xdc143c
 
         switch (true) {
             case this.orientation && field.x <= 10 - this.selected.dlugosc:
@@ -377,7 +377,7 @@ class Game {
     unhiglightField = () => {
         if (this.hlFields.length > 0)
             for (let i = 0; i < this.hlFields.length; i++)
-                this.hlFields[i].material.color.set(0xffffff)
+                this.hlFields[i].material.color.set(0x7286ed)
 
         this.hlField = null;
         this.hlFields.length = 0;
@@ -389,13 +389,13 @@ class Game {
     }
 
     shoot = async (event) => {
-        if(this.move){
+        if (this.move) {
             this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
             this.raycaster.setFromCamera(this.mouseVector, this.camera);
             const intersects = this.raycaster.intersectObjects(this.enemyBoard.children);
 
-            if(intersects.length>0 && intersects[0].object.canShoot){
+            if (intersects.length > 0 && intersects[0].object.canShoot) {
 
                 clearInterval(this.timer)
                 this.move = false
@@ -415,11 +415,11 @@ class Game {
                 let w = await net.shootFetchPostAsync(m)
 
                 if (w.shooted) {
-                    intersects[0].object.material.color.set(0xff0000)
+                    intersects[0].object.material.color.set(0xdc143c)
                     this.myPkt++
                     this.checkWin()
                 } else {
-                    intersects[0].object.material.color.set(0x00ff00)
+                    intersects[0].object.material.color.set(0x1fc600)
                     net.checkLastMove()
                 }
                 intersects[0].object.canShoot = false
@@ -433,12 +433,12 @@ class Game {
             this.win()
 
         if (this.myTab[w.x][w.z] == 2) {
-            this.myFields[w.x][w.z].material.color.set(0xff0000)
+            this.myFields[w.x][w.z].material.color.set(0xdc143c)
             this.enemyPkt++
             this.checkLose()
         }
         else
-            this.myFields[w.x][w.z].material.color.set(0x00ff00)
+            this.myFields[w.x][w.z].material.color.set(0x1fc600)
 
         this.myTimer()
         this.move = true
@@ -448,7 +448,7 @@ class Game {
         new TWEEN.Tween(this.camera.position)
             .to({
                 x: 175,
-                y: 800,
+                y: 850,
                 z: 650
             }, 2000)
             .easing(TWEEN.Easing.Linear.None)
@@ -459,11 +459,11 @@ class Game {
             this.shoot(e)
         }
 
-        if(w.userName != user){
+        if (w.userName != user) {
             this.move = true
             this.myTimer()
         }
-        else{
+        else {
             net.checkLastMove()
             ui.enemyMove()
         }
@@ -512,10 +512,10 @@ class Game {
     // Tworzenie planszy przeciwnika - w nią gracz bedzie klikal w celu oddania strzalu
     createEnemyBoard = () => {
         this.enemyBoard = new THREE.Object3D();
-        for(let i = 0; i < 10; i++)
-            for(let j = 0; j<10; j++)
+        for (let i = 0; i < 10; i++)
+            for (let j = 0; j < 10; j++)
                 this.enemyBoard.add(new EnemyField(i, j))
-        
+
         this.enemyBoard.position.x = 270
         this.enemyBoard.position.z = -200
         this.scene.add(this.enemyBoard)
@@ -539,7 +539,7 @@ class Game {
         this.myBoard.position.z = -200
         this.scene.add(this.myBoard)
     }
-  
+
     createShipsToSet = () => {
         this.shipsToSet = new THREE.Object3D();
         this.shipsToSet.position.x = -700

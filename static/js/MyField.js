@@ -4,13 +4,13 @@ class MyField extends THREE.Mesh {
     constructor(x, z) {
         super() // wywołanie konstruktora Mesha
         this.geometry = new THREE.BoxGeometry(this.a, 10, this.a)
-        this.material =  new THREE.MeshBasicMaterial({
-                    map: new THREE.TextureLoader().load("../img/water.jpg"),
-                    side: THREE.DoubleSide,
-                    color: 0xffffff, 
-                    transparent: true, 
+        this.material = new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load("../img/water.jpg"),
+            side: THREE.DoubleSide,
+            color: 0x7286ed,
+            transparent: true,
         })
-        this.position.set(x*this.a, 0, z*this.a)
+        this.position.set(x * this.a, 0, z * this.a)
         this.x = x
         this.z = z
     }

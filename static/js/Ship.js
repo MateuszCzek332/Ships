@@ -5,11 +5,11 @@ class Ship extends THREE.Mesh {
         this.dlugosc = dl
 
         if (dl == 4)
-            this.scale.set(1.65 / 4 * dl, 2, 1.65)
+            this.scale.set(1.65 / 4 * dl, 2.2, 1.65)
         if (dl == 3)
-            this.scale.set(1.65 / 4 * dl, 1.9, 1.2)
+            this.scale.set(1.65 / 4 * dl, 2.2, 1.2)
         if (dl == 2)
-            this.scale.set(1.65 / 4 * dl, 1.8, 1.2)
+            this.scale.set(1.65 / 4 * dl, 2, 1.2)
         if (dl == 1)
             this.scale.set(1.8 / 4 * dl, 1.55, 1)
 
@@ -17,7 +17,7 @@ class Ship extends THREE.Mesh {
         this.position.x += (this.a * dl) / 2
         this.material = new THREE.MeshBasicMaterial({
             side: THREE.DoubleSide,
-            color: 0x3D3D3B,
+            color: 0x243032,
             transparent: true,
         })
     }
